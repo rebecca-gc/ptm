@@ -1,7 +1,7 @@
 from Bio import SeqIO
 
-file1 = "human_NOTnitro_reviewed/sequence.fasta"
-file_target = "human_NOTnitro_reviewed/uniprotkb_organism_id_9606_NOT_keyword_2025_05_12.fasta"
+file1 = "path"
+file_target = "path"
 
 seqs1 = {str(record.seq) for record in SeqIO.parse(file1, "fasta")}
 seqs_target = {str(record.seq) for record in SeqIO.parse(file_target, "fasta")}
