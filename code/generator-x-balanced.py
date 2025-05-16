@@ -1,11 +1,23 @@
-# Generates classes.txt and seqs.fasta for two input fasta files
-
 import os
 import argparse
 from Bio import SeqIO
 import random
 
-def generator(positive, negative, factor):
+
+def generator(positive, negative, factor=1.0):
+    """
+    generator controls the class imbalance with a factor and
+    generates a text file with a 1 for every sample of the positive class
+    and a 0 for every sample of the negative class. Additionally, it generates a
+    FASTA file for each of the classes
+    Args:
+        positive (os.path): The path to the FASTA file with samples of the positive class.
+        negative (os.path): The path to the FASTA file with samples of the negative class.
+        factor (float, optional): The factor that controls the class imbalance. Defaults to 1.0.
+    Returns:
+        None: None
+    """
+
     records_pos = [str(record.seq) for record in SeqIO.parse(positive, "fasta")]
     records_neg = [str(record.seq) for record in SeqIO.parse(negative, "fasta")]
 
@@ -43,6 +55,9 @@ def generator(positive, negative, factor):
 
     print('\nSuccessfully saved seqs.fasta\n')
 
+    return None
+
+
 def main():
     positive_error = "Input file path for positive class is bad or the file does not exist"
     negative_error = "Input file path for negative class is bad or the file does not exist"
@@ -51,7 +66,7 @@ def main():
     parser = argparse.ArgumentParser(description="Generates classes.txt and seqs.fasta from two FASTA input files")
     parser.add_argument("--positive", help="Path to FASTA file with positive samples", required=True)
     parser.add_argument("--negative", help="Path to FASTA file with negative samples", required=True)
-    parser.add_argument("--factor", help="Factor for how many more samples of the larger class may be present", required=False, default=1)
+    parser.add_argument("--factor", help="Factor for how many more samples of the larger class may be present", required=False, default=1.0)
 
     args = parser.parse_args()
 
@@ -61,10 +76,13 @@ def main():
     if not os.path.exists(args.negative):
         parser.error(negative_error)
 
-    if float(args.factor) < 1:
+    if float(args.factor) < 1.0:
         parser.error(factor_error)
 
-    generator(args.positive,args.negative,float(args.factor))
+    generator(args.positive, args.negative, float(args.factor))
+
+    return None
+
 
 if __name__ == '__main__':
     main()
