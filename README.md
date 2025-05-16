@@ -29,6 +29,6 @@ The example datasets which are used to predict the Post Translational Modificati
 ## Code
 |Script|Description|
 |---|---|
-|[code/](./Source/)|contains all scripts used for dataset modification.|
+|[code/](./code/)|contains all scripts used for dataset modification.|
 |[code/remove-common-seqs.py](./code/remove-common-seqs.py)|contains the code for filtering oout false negatives.|
-|[code/generator.py](./code/generator.py)|contains the code to generate a classes.txt and seqs.fasta for two given FASTA files.|
+|[code/generator-x-balanced.py](./code/generator-x-balanced.py)|contains the code to generate a balanced classes.txt and seqs.fasta for two given FASTA files.|
