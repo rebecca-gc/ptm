@@ -42,7 +42,7 @@ def main():
 
     if not os.path.exists(args.compare_file):
         parser.error(compare_file_error)
-    
+
     if not os.path.exists(args.target_file):
         parser.error(target_file_error)
 

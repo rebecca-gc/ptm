@@ -1,7 +1,7 @@
 import os
 import argparse
-from Bio import SeqIO
 import random
+from Bio import SeqIO
 
 
 def generator(positive, negative, factor=1.0):
@@ -33,7 +33,7 @@ def generator(positive, negative, factor=1.0):
             file.write("1\n")
         for _ in records_neg:
             file.write("0\n")
-    
+
     with open("classes.txt", "rb+") as file:
         file.seek(-1, 2)
         file.truncate()
@@ -48,7 +48,7 @@ def generator(positive, negative, factor=1.0):
         for record in records_neg:
             file.write(f">Seq{i}\n{record}\n")
             i += 1
-    
+
     with open("seqs.fasta", "rb+") as file:
         file.seek(-1, 2)
         file.truncate()
@@ -72,7 +72,7 @@ def main():
 
     if not os.path.exists(args.positive):
         parser.error(positive_error)
-    
+
     if not os.path.exists(args.negative):
         parser.error(negative_error)
 
