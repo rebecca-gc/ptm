@@ -7,13 +7,14 @@ from Bio import SeqIO
 GLYCO_DIR = '/Users/rebeccagrevens/Documents/ptm/data/glycosylation'
 S_NITRO_DIR = '/Users/rebeccagrevens/Documents/ptm/data/s_nitrosylation'
 
+
 def main():
     dirs = [GLYCO_DIR, S_NITRO_DIR]
     for dir in dirs:
         merged_file = os.path.join(dir, "merged.fasta")
         if os.path.exists(merged_file):
             os.remove(merged_file)
-        
+
         seqs = []
         new_seqs = []
 
@@ -28,7 +29,7 @@ def main():
                 seqs = all_seqs
                 print(f"{filename}: {len(new_seqs)} sequences. {removed} were already there")
                 new_seqs = []
-        
+
         with open(merged_file, "w") as merged:
             i = 1
             for seq in seqs:
