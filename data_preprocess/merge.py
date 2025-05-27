@@ -6,10 +6,11 @@ from Bio import SeqIO
 
 GLYCO_DIR = '/Users/rebeccagrevens/Documents/ptm/data/glycosylation'
 S_NITRO_DIR = '/Users/rebeccagrevens/Documents/ptm/data/s_nitrosylation'
+ACET_DIR = '/Users/rebeccagrevens/Documents/ptm/data/acetylation'
 
 
 def main():
-    dirs = [GLYCO_DIR, S_NITRO_DIR]
+    dirs = [GLYCO_DIR, S_NITRO_DIR, ACET_DIR]
     for dir in dirs:
         merged_file = os.path.join(dir, "merged.fasta")
         if os.path.exists(merged_file):
