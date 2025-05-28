@@ -256,6 +256,25 @@ def ptm_code2():
     print("PTMcode2 download successful")
 
 
+def qptm():
+    filepath = os.path.join(GLYCO_DIR, 'qPTM.fasta')
+    txtpath = "/Users/rebeccagrevens/Documents/ptm/local_data/qPTM_all_data.txt"
+
+    uniprot_ids = []
+
+    with open(txtpath, 'r') as f:
+        for line in f:
+            words = line.strip().split('\t')
+            if words[0] == "Human" and words[5] == "Glycosylation":
+                uniprot_ids.append(words[2])
+
+    uniprot_ids = list(set(uniprot_ids))
+
+    get_uniprot_seqs(uniprot_ids,filepath)
+
+    print("qPTM download successful")
+
+
 def unipep():
     filepath = os.path.join(GLYCO_DIR, 'unipep.fasta')
 
@@ -302,7 +321,10 @@ def main():
     # Unipep https://unipep.systemsbiology.net/
     # unipep()
 
-    print("All downloads successful")
+    # qPTM https://qptm.omicsbio.info/
+    # qptm()
+
+    print("All downloads successful\n")
 
 
 if __name__ == '__main__':

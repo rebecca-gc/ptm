@@ -3,11 +3,8 @@
 import os
 import gzip
 import shutil
-from io import StringIO
 import requests
-import pandas as pd
 from Bio import Entrez
-from bs4 import BeautifulSoup
 
 
 S_NITRO_DIR = '/Users/rebeccagrevens/Documents/ptm/data/s_nitrosylation'
@@ -243,7 +240,7 @@ def main():
     # PTMcode2 https://ptmcode.embl.de/index.cgi
     # ptm_code2() # only downloads associations within proteins (for now?)
 
-    print("All downloads successful")
+    print("All downloads successful\n")
 
 
 if __name__ == '__main__':

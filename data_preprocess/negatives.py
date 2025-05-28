@@ -42,14 +42,14 @@ def filter_false_negatives(files):
 
         filtered_path = os.path.join(NO_PTM_DIR, f"filtered_{files[i]}")
 
+        if os.path.exists(filtered_path):
+            os.remove(filtered_path)
+
         with open(filtered_path, "w") as filtered:
             for record in SeqIO.parse(target_path, "fasta"):
                 if record.seq not in common_seqs:
                     SeqIO.write(record, filtered, "fasta")
-        
-        if os.path.exists(target_path):
-            os.remove(target_path)
-        
+
         filtered_seqs = {str(record.seq) for record in SeqIO.parse(filtered_path, "fasta")}
         print(f"PTM: {len(compare_seqs)}, NO_PTM: {len(filtered_seqs)}")
 
@@ -60,11 +60,11 @@ def main():
     # SwissProt https://www.uniprot.org/
     # swiss_prot(files)
 
-    print("All downloads successful")
+    print("Downloads of negative sequences successful\n")
 
     filter_false_negatives(files)
 
-    print("Filtered out all false negatives")
+    print("\nFiltered out all false negatives")
 
 
 if __name__ == '__main__':

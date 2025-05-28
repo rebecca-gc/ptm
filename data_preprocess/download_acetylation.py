@@ -250,6 +250,25 @@ def unipep():
     print("Unipep download successful")
 
 
+def qptm():
+    filepath = os.path.join(ACET_DIR, 'qPTM.fasta')
+    txtpath = "/Users/rebeccagrevens/Documents/ptm/local_data/qPTM_all_data.txt"
+
+    uniprot_ids = []
+
+    with open(txtpath, 'r') as f:
+        for line in f:
+            words = line.strip().split('\t')
+            if words[0] == "Human" and words[5] == "Acetylation":
+                uniprot_ids.append(words[2])
+
+    uniprot_ids = list(set(uniprot_ids))
+
+    get_uniprot_seqs(uniprot_ids,filepath)
+
+    print("qPTM download successful")
+
+
 def main():
     print("Starting downloads...")
     # SwissProt https://www.uniprot.org/
@@ -267,7 +286,10 @@ def main():
     # PTMcode2 https://ptmcode.embl.de/index.cgi
     # ptm_code2() # only downloads associations within proteins (for now?)
 
-    print("All downloads successful")
+    # qPTM https://qptm.omicsbio.info/
+    # qptm()
+
+    print("All downloads successful\n")
 
 
 if __name__ == '__main__':

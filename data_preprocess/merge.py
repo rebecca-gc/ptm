@@ -1,4 +1,4 @@
-# merge existing FASTA files and remove duplicate sequences
+# merge existing FASTA files (from databases) and remove duplicate sequences
 
 import os
 from Bio import SeqIO
@@ -11,17 +11,17 @@ ACET_DIR = '/Users/rebeccagrevens/Documents/ptm/data/acetylation'
 
 def main():
     dirs = [GLYCO_DIR, S_NITRO_DIR, ACET_DIR]
-    for dir in dirs:
-        merged_file = os.path.join(dir, "merged.fasta")
+    for d in dirs:
+        merged_file = os.path.join(d, "merged.fasta")
         if os.path.exists(merged_file):
             os.remove(merged_file)
 
         seqs = []
         new_seqs = []
 
-        for filename in os.listdir(dir):
-            if filename.endswith(".fasta") or filename.endswith(".fa"):
-                filepath = os.path.join(dir, filename)
+        for filename in os.listdir(d):
+            if filename.endswith(".fasta") and filename != "merged.fasta" and filename != "seqs.fasta":
+                filepath = os.path.join(d, filename)
                 for record in SeqIO.parse(filepath, "fasta"):
                     new_seqs.append(record.seq)
                 all_seqs = seqs + new_seqs
@@ -37,7 +37,7 @@ def main():
                 merged.write(f">Seq{i}\n{seq}\n")
                 i += 1
 
-        print("\nMerged succesfully")
+        print("Merged succesfully\n")
 
 
 if __name__ == '__main__':
