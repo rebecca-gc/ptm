@@ -2,13 +2,13 @@ import random
 from Bio import SeqIO
 
 
-NO_PTM_FILES = ["/Users/rebeccagrevens/Documents/ptm/data/no_ptm/filtered_no_glyco.fasta",
-                "/Users/rebeccagrevens/Documents/ptm/data/no_ptm/filtered_no_s_nitro.fasta",
-                "/Users/rebeccagrevens/Documents/ptm/data/no_ptm/filtered_no_acet.fasta",]
+NO_PTM_FILES = ["../data/no_ptm/filtered_no_glyco.fasta",
+                "../data/no_ptm/filtered_no_s_nitro.fasta",
+                "../data/no_ptm/filtered_no_acet.fasta",]
 
-DIRS = ['/Users/rebeccagrevens/Documents/ptm/data/glycosylation',
-        '/Users/rebeccagrevens/Documents/ptm/data/s_nitrosylation',
-        '/Users/rebeccagrevens/Documents/ptm/data/acetylation']
+DIRS = ['../data/glycosylation',
+        '../data/s_nitrosylation',
+        '../data/acetylation']
 
 
 def generator(positive, negative, factor=1.0):

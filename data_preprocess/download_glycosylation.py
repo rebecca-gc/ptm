@@ -10,7 +10,7 @@ from Bio import Entrez
 from bs4 import BeautifulSoup
 
 
-GLYCO_DIR = '/Users/rebeccagrevens/Documents/ptm/data/glycosylation'
+GLYCO_DIR = '../data/glycosylation'
 
 
 def get_uniprot_seqs(uniprot_ids, filepath):

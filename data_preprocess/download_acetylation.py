@@ -10,7 +10,7 @@ from Bio import Entrez
 from bs4 import BeautifulSoup
 
 
-ACET_DIR = '/Users/rebeccagrevens/Documents/ptm/data/acetylation'
+ACET_DIR = '../data/acetylation'
 
 
 def get_uniprot_seqs(uniprot_ids, filepath):

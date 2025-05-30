@@ -5,11 +5,11 @@ import requests
 from Bio import SeqIO
 
 
-NO_PTM_DIR = "/Users/rebeccagrevens/Documents/ptm/data/no_ptm"
+NO_PTM_DIR = "../data/no_ptm"
 
-DIRS = ['/Users/rebeccagrevens/Documents/ptm/data/glycosylation',
-        '/Users/rebeccagrevens/Documents/ptm/data/s_nitrosylation',
-        '/Users/rebeccagrevens/Documents/ptm/data/acetylation']
+DIRS = ['../data/glycosylation',
+        '../data/s_nitrosylation',
+        '../data/acetylation']
 
 
 def swiss_prot(files):

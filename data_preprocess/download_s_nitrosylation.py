@@ -7,7 +7,7 @@ import requests
 from Bio import Entrez
 
 
-S_NITRO_DIR = '/Users/rebeccagrevens/Documents/ptm/data/s_nitrosylation'
+S_NITRO_DIR = '../data/s_nitrosylation'
 
 
 def get_uniprot_seqs(uniprot_ids, filepath):

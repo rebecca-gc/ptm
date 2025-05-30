@@ -4,9 +4,9 @@ import os
 from Bio import SeqIO
 
 
-GLYCO_DIR = '/Users/rebeccagrevens/Documents/ptm/data/glycosylation'
-S_NITRO_DIR = '/Users/rebeccagrevens/Documents/ptm/data/s_nitrosylation'
-ACET_DIR = '/Users/rebeccagrevens/Documents/ptm/data/acetylation'
+GLYCO_DIR = '../data/glycosylation'
+S_NITRO_DIR = '../data/s_nitrosylation'
+ACET_DIR = '../data/acetylation'
 
 
 def main():
