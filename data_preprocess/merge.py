@@ -36,7 +36,7 @@ def main():
 
         with open(merged_file, "w") as merged:
             for rec in records:
-                merged.write(f">{rec[0]}|{rec[1]} {rec[2]}\n{rec[3]}\n")
+                merged.write(f">{rec[0]}|{rec[1]}{rec[2]}\n{rec[3]}\n")
             for recs in rec_without_disease:
                 for r in recs:
                     merged.write(f">{r.description}\n{r.seq}\n")

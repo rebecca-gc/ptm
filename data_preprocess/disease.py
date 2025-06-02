@@ -46,7 +46,7 @@ def get_records(uniprot_ids):
                 mim_ids = re.findall(r'\[MIM:(\d+)', disease)
                 mim_string = ""
                 for m in mim_ids:
-                    mim_string += f"MIM:{m}"
+                    mim_string += f" MIM:{m}"
                 seq = row.get("Sequence", "")
                 record = [acc,name,mim_string,seq]
                 records.add(tuple(record))
@@ -60,7 +60,7 @@ def vis_disease(dir_path):
     diseases = []
     for record in SeqIO.parse(f"{dir_path}/merged.fasta", "fasta"):
         if "MIM:" in record.description:
-            parts = record.description.split("MIM:")
+            parts = record.description.split(" MIM:")
             for disease_part in parts[1:]:
                 diseases.append(disease_part)
 
