@@ -1,4 +1,6 @@
 # get disease information
+# https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+AND+%28cc_disease%3A*%29%29
+# API to get all sequences of proteins related to diseases
 
 import csv
 from io import StringIO

@@ -7,10 +7,11 @@ import disease
 GLYCO_DIR = '../data/glycosylation'
 S_NITRO_DIR = '../data/s_nitrosylation'
 ACET_DIR = '../data/acetylation'
+METHYL_DIR = '../data/methylation'
 
 
 def main():
-    dirs = [GLYCO_DIR, S_NITRO_DIR, ACET_DIR]
+    dirs = [GLYCO_DIR, S_NITRO_DIR, ACET_DIR, METHYL_DIR]
     for d in dirs:
         merged_file = os.path.join(d, "merged.fasta")
         if os.path.exists(merged_file):

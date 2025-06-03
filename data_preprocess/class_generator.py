@@ -4,11 +4,13 @@ from Bio import SeqIO
 
 NO_PTM_FILES = ["../data/no_ptm/filtered_no_glyco.fasta",
                 "../data/no_ptm/filtered_no_s_nitro.fasta",
-                "../data/no_ptm/filtered_no_acet.fasta",]
+                "../data/no_ptm/filtered_no_acet.fasta",
+                "../data/no_ptm/filtered_no_methyl.fasta"]
 
 DIRS = ['../data/glycosylation',
         '../data/s_nitrosylation',
-        '../data/acetylation']
+        '../data/acetylation',
+        '../data/methylation']
 
 
 def generator(positive, negative, factor=1.0):

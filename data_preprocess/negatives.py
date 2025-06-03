@@ -9,13 +9,15 @@ NO_PTM_DIR = "../data/no_ptm"
 
 DIRS = ['../data/glycosylation',
         '../data/s_nitrosylation',
-        '../data/acetylation']
+        '../data/acetylation',
+        '../data/methylation']
 
 
 def swiss_prot(files):
     urls = ["https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+NOT+%28ft_carbohyd%3AGlcNAc%29%29",
             "https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+NOT+%28keyword%3AKW-0702%29%29",
-            "https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+NOT+%28keyword%3AKW-0007%29%29"]
+            "https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+NOT+%28keyword%3AKW-0007%29%29",
+            "https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+NOT+%28keyword%3AKW-0488%29%29"]
 
     for i in range(0,len(urls)):
         filepath = os.path.join(NO_PTM_DIR, files[i])
@@ -55,8 +57,8 @@ def filter_false_negatives(files):
 
 
 def main():
-    files = ['no_glyco.fasta', 'no_s_nitro.fasta', 'no_acet.fasta']
-    print("Starting downloads...")
+    files = ['no_glyco.fasta', 'no_s_nitro.fasta', 'no_acet.fasta', 'no_methyl.fasta']
+    print("Starting negative downloads...")
     # SwissProt https://www.uniprot.org/
     # swiss_prot(files)
 
