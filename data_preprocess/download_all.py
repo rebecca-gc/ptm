@@ -3,11 +3,11 @@
 import os
 import gzip
 import shutil
+from io import StringIO
 import requests
+import pandas as pd
 from Bio import Entrez
-
-
-S_NITRO_DIR = '../data/s_nitrosylation'
+from bs4 import BeautifulSoup
 
 
 def get_uniprot_seqs(uniprot_ids, filepath):
@@ -76,10 +76,9 @@ def get_uniprot_seqs_from_names(uniprot_names,filepath): # very slow
     print(f'Downloaded {downloaded} entries and {d_failed} failed to download\n')
 
 
-def swiss_prot():
-    filepath = os.path.join(S_NITRO_DIR, 'swissProt.fasta')
+def swiss_prot(ptm_dir, url):
+    filepath = os.path.join(ptm_dir, 'swissProt.fasta')
 
-    url = 'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+AND+%28keyword%3AKW-0702%29%29'
     with requests.get(url, stream=True, timeout=10) as request:
         request.raise_for_status()
         with open(filepath, 'wb') as f:
@@ -88,12 +87,11 @@ def swiss_prot():
     print('SwissProt download successful')
 
 
-def ncbi():
-    filepath = os.path.join(S_NITRO_DIR, 'ncbi.fasta')
+def ncbi(ptm_dir, query):
+    filepath = os.path.join(ptm_dir, 'ncbi.fasta')
 
     Entrez.email = 'rebeg02@zedat.fu-berlin.de'
-    query = '"Homo sapiens"[Organism] AND S-nitrosylation[All Fields]'
-    handle = Entrez.esearch(db='protein', term=query, retmax=4000)
+    handle = Entrez.esearch(db='protein', term=query, retmax=10000)
     record = Entrez.read(handle)
     ids = record['IdList']
 
@@ -104,23 +102,22 @@ def ncbi():
     print('NCBI download successful')
 
 
-def db_ptm():
-    zippath = os.path.join(S_NITRO_DIR, 'dbPTM.gz')
-    txtpath = os.path.join(S_NITRO_DIR, 'dbPTM.txt')
-    filepath = os.path.join(S_NITRO_DIR, 'dbPTM.fasta')
+def db_ptm(ptm_dir, urls):
+    zippath = os.path.join(ptm_dir, 'dbPTM.gz')
+    txtpath = os.path.join(ptm_dir, 'dbPTM.txt')
+    filepath = os.path.join(ptm_dir, 'dbPTM.fasta')
 
-    url = 'https://biomics.lab.nycu.edu.tw/dbPTM/download/experiment/S-nitrosylation.gz'
+    for url in urls:
+        response = requests.get(url, timeout=30)
+        if response.ok:
+            with open(zippath, 'wb') as f:
+                f.write(response.content)
+        else:
+            print('Failed to download file:', response.status_code)
 
-    response = requests.get(url, timeout=30)
-    if response.ok:
-        with open(zippath, 'wb') as f:
-            f.write(response.content)
-    else:
-        print('Failed to download file:', response.status_code)
-
-    with gzip.open(zippath, 'rb') as f_in:
-        with open(txtpath, 'ab') as f_out:
-            shutil.copyfileobj(f_in, f_out)
+        with gzip.open(zippath, 'rb') as f_in:
+            with open(txtpath, 'ab') as f_out:
+                shutil.copyfileobj(f_in, f_out)
 
     uniprot_ids = []
 
@@ -147,12 +144,10 @@ def db_ptm():
     print('dbPTM download successful')
 
 
-def ptmd():
-    zippath = os.path.join(S_NITRO_DIR, 'ptmd.zip')
-    txtpath = os.path.join(S_NITRO_DIR, 'S-Nitrosylation')
-    filepath = os.path.join(S_NITRO_DIR, 'ptmd.fasta')
-
-    url = 'https://ptmd.biocuckoo.cn/Download/S-Nitrosylation.zip'
+def ptmd(ptm_dir, ptm, url, ptmd_word):
+    zippath = os.path.join(ptm_dir, 'ptmd.zip')
+    txtpath = os.path.join(ptm_dir, ptm)
+    filepath = os.path.join(ptm_dir, 'ptmd.fasta')
 
     response = requests.get(url, timeout=30)
     if response.ok:
@@ -161,13 +156,13 @@ def ptmd():
     else:
         print('Failed to download file:', response.status_code)
 
-    shutil.unpack_archive(zippath, S_NITRO_DIR, 'zip')
+    shutil.unpack_archive(zippath, ptm_dir, 'zip')
 
     uniprot_ids = []
 
     with open(txtpath, 'r') as f:
         for line in f:
-            if 'S-Nitrosylation' in line:
+            if ptmd_word in line:
                 uniprot_ids.append(line[0:6])
 
     uniprot_ids = list(set(uniprot_ids))
@@ -182,10 +177,10 @@ def ptmd():
     print('ptmd download successful')
 
 
-def ptm_code2():
-    zippath = os.path.join(S_NITRO_DIR, 'PTMcode2.zip')
-    txtpath = os.path.join(S_NITRO_DIR, 'PTMcode2_associations_within_proteins.txt')
-    filepath = os.path.join(S_NITRO_DIR, 'PTMcode2.fasta')
+def ptm_code2(ptm_dir, url, ptm_code2_word):
+    zippath = os.path.join(ptm_dir, 'PTMcode2.zip')
+    txtpath = os.path.join(ptm_dir, 'PTMcode2_associations_within_proteins.txt')
+    filepath = os.path.join(ptm_dir, 'PTMcode2.fasta')
 
     url = 'https://ptmcode.embl.de/data/PTMcode2_associations_within_proteins.txt.gz'
 
@@ -204,7 +199,7 @@ def ptm_code2():
 
     with open(txtpath, 'r') as f:
         for line in f:
-            if 'nitrosylation' in line:
+            if ptm_code2_word in line:
                 idx = line.find('Homo sapiens')
                 if idx != -1:
                     before_human = line[:idx].strip()
@@ -223,22 +218,101 @@ def ptm_code2():
     print('PTMcode2 download successful')
 
 
+def qptm(ptm_dir, ptm):
+    filepath = os.path.join(ptm_dir, 'qPTM.fasta')
+    txtpath = '../local_data/qPTM_all_data.txt'
+
+    uniprot_ids = []
+
+    with open(txtpath, 'r') as f:
+        for line in f:
+            words = line.strip().split('\t')
+            if words[0] == 'Human' and words[5] == ptm:
+                uniprot_ids.append(words[2])
+
+    uniprot_ids = list(set(uniprot_ids))
+
+    get_uniprot_seqs(uniprot_ids,filepath)
+
+    print('qPTM download successful')
+
+
+def unipep(ptm_dir):
+    filepath = os.path.join(ptm_dir, 'unipep.fasta')
+
+    url = 'https://db.systemsbiology.net/sbeams/cgi/Glycopeptide/browse_glycopeptides.cgi'
+
+    response = requests.get(url, timeout=30)
+    if response.ok:
+        soup = BeautifulSoup(response.text, 'html.parser')
+        table = soup.find('table')
+        table_html = str(table)
+        table_io = StringIO(table_html)
+        df = pd.read_html(table_io)[0]
+        df = df.dropna()
+        protein_symbols = df[2].tolist()
+        del protein_symbols[0]
+        protein_symbols = list(set(protein_symbols))
+        get_uniprot_seqs_from_names(protein_symbols,filepath)
+    else:
+        print('Failed to download file:', response.status_code)
+
+    print('Unipep download successful')
+
+
+def databases(ptm_dir, swiss_prot_url, query, db_ptm_urls, ptm, ptmd_url, ptmd_word, ptm_code2_word):
+    swiss_prot(ptm_dir, swiss_prot_url)
+    ncbi(ptm_dir, query)
+    db_ptm(ptm_dir, db_ptm_urls)
+    ptmd(ptm_dir, ptm, ptmd_url, ptmd_word)
+    ptm_code2(ptm_dir, ptm_code2_word)
+    if ptm != 'S-Nitrosylation':
+        qptm(ptm_dir,ptm)
+        if ptm == 'Glycosylation':
+            unipep(ptm_dir)
+
+
 def main():
     print('Starting downloads...')
-    # SwissProt https://www.uniprot.org/
-    swiss_prot()
 
-    # National Library of Medicine https://www.ncbi.nlm.nih.gov/
-    ncbi()
+    databases('../data/glycosylation',
+              'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+AND+%28ft_carbohyd%3AGlcNAc%29%29',
+              '"Homo sapiens"[Organism] AND glycosylated[All Fields]',
+              ['https://biomics.lab.nycu.edu.tw/dbPTM/download/experiment/C-linked%20Glycosylation.gz',
+              'https://biomics.lab.nycu.edu.tw/dbPTM/download/experiment/N-linked%20Glycosylation.gz',
+              'https://biomics.lab.nycu.edu.tw/dbPTM/download/experiment/O-linked%20Glycosylation.gz',
+              'https://biomics.lab.nycu.edu.tw/dbPTM/download/experiment/S-linked%20Glycosylation.gz'],
+              'Glycosylation',
+              'https://ptmd.biocuckoo.cn/Download/Glycosylation.zip',
+              'glycosylation',
+              'glycosylation')
 
-    # dbPTM https://biomics.lab.nycu.edu.tw/dbPTM/index.php
-    db_ptm()
-
-    # ptmd https://ptmd.biocuckoo.cn/
-    ptmd()
-
-    # PTMcode2 https://ptmcode.embl.de/index.cgi
-    ptm_code2() # only downloads associations within proteins (for now?)
+    databases('../data/s_nitrosylation',
+              'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+AND+%28keyword%3AKW-0702%29%29',
+              '"Homo sapiens"[Organism] AND S-nitrosylation[All Fields]',
+              ['https://biomics.lab.nycu.edu.tw/dbPTM/download/experiment/S-nitrosylation.gz'],
+              'S-Nitrosylation',
+              'https://ptmd.biocuckoo.cn/Download/S-Nitrosylation.zip',
+              'S-Nitrosylation',
+              'nitrosylation')
+    
+    databases('../data/acetylation',
+              'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+AND+%28keyword%3AKW-0007%29%29',
+              '"Homo sapiens"[Organism] AND acetylated[All Fields]',
+              ['https://biomics.lab.nycu.edu.tw/dbPTM/download/experiment/Acetylation.gz'],
+              'Acetylation',
+              'https://ptmd.biocuckoo.cn/Download/Acetylation.zip',
+              'Acetylation',
+              'acetylation')
+    
+    databases('../data/methylation',
+              'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+AND+%28keyword%3AKW-0488%29%29',
+              '"Homo sapiens"[Organism] AND Methylation[All Fields]',
+              ['https://biomics.lab.nycu.edu.tw/dbPTM/download/experiment/Methylation.gz'],
+              'Methylation',
+              'https://ptmd.biocuckoo.cn/Download/Methylation.zip',
+              'Methylation',
+              'methylation')
 
     print('All downloads successful\n')
 
