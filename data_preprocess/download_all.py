@@ -75,6 +75,24 @@ def get_uniprot_seqs_from_names(uniprot_names,filepath): # very slow
     print(f'{failed} entries failed')
     print(f'Downloaded {downloaded} entries and {d_failed} failed to download\n')
 
+#https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28protein_name%3Abla%29+OR+%28gene%3Abla%29%29
+#https://rest.uniprot.org/uniparc/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28%28protein_name%3Aecl%29+OR+%28gene%3Abla%29%29%29
+# def get_records(uniprot_names,filepath):
+#     if os.path.exists(filepath):
+#         os.remove(filepath)
+#     chunk_size = 250
+#     for i in range(0, len(uniprot_names), chunk_size):
+#         chunk = uniprot_names[i:(i + chunk_size)]
+#         query = '+OR+'.join([f'%28organism_id%3A9606%29+AND+%28%28protein_name%3A{name}%29+OR+%28gene%3A{name}%29%29' for name in chunk])
+#         url = f'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28{query}%29'
+#         #print(url)
+#         response = requests.get(url, timeout=30)
+#         if response.ok:
+#             with open(filepath, 'a') as f:
+#                 f.write(response.text)
+#         else:
+#             print('Batch download failed:', response.status_code)
+
 
 def swiss_prot(ptm_dir, url):
     filepath = os.path.join(ptm_dir, 'swissProt.fasta')
@@ -177,7 +195,7 @@ def ptmd(ptm_dir, ptm, url, ptmd_word):
     print('ptmd download successful')
 
 
-def ptm_code2(ptm_dir, url, ptm_code2_word):
+def ptm_code2(ptm_dir, ptm_code2_word):
     zippath = os.path.join(ptm_dir, 'PTMcode2.zip')
     txtpath = os.path.join(ptm_dir, 'PTMcode2_associations_within_proteins.txt')
     filepath = os.path.join(ptm_dir, 'PTMcode2.fasta')
@@ -295,7 +313,7 @@ def main():
               'https://ptmd.biocuckoo.cn/Download/S-Nitrosylation.zip',
               'S-Nitrosylation',
               'nitrosylation')
-    
+
     databases('../data/acetylation',
               'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+AND+%28keyword%3AKW-0007%29%29',
               '"Homo sapiens"[Organism] AND acetylated[All Fields]',
@@ -304,7 +322,7 @@ def main():
               'https://ptmd.biocuckoo.cn/Download/Acetylation.zip',
               'Acetylation',
               'acetylation')
-    
+
     databases('../data/methylation',
               'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+AND+%28keyword%3AKW-0488%29%29',
               '"Homo sapiens"[Organism] AND Methylation[All Fields]',

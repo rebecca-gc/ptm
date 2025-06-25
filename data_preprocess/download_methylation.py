@@ -246,22 +246,22 @@ def qptm():
 def main():
     print('Starting downloads...')
     # SwissProt https://www.uniprot.org/
-    swiss_prot()
+    # swiss_prot()
 
     # National Library of Medicine https://www.ncbi.nlm.nih.gov/
-    ncbi()
+    # ncbi()
 
     # dbPTM https://biomics.lab.nycu.edu.tw/dbPTM/index.php
-    db_ptm()
+    # db_ptm()
 
     # ptmd https://ptmd.biocuckoo.cn/
-    ptmd()
+    # ptmd()
 
     # PTMcode2 https://ptmcode.embl.de/index.cgi
     ptm_code2() # only downloads associations within proteins (for now?)
 
     # qPTM https://qptm.omicsbio.info/
-    qptm()
+    # qptm()
 
     print('All downloads successful\n')
 

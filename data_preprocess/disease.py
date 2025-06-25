@@ -74,9 +74,9 @@ def vis_disease(dir_path):
     plt.xlabel('MIM ID of Diseases')
     plt.ylabel('Absolute Frequency')
     plt.xticks(rotation=45, ha='right')
-    plt.title(f'Absolute Frequency of Top 10 Diseases (PTM: {dir_path.split('/')[-1]})')
+    plt.title(f'Absolute Frequency of Top 10 Diseases (PTM: {dir_path.split("/")[-1]})')
     plt.tight_layout()
-    plt.savefig(f'{dir_path}/top10diseases_{dir_path.split('/')[-1]}.jpg')
+    plt.savefig(f'{dir_path}/top10diseases_{dir_path.split("/")[-1]}.jpg')
     plt.clf()
 
 
