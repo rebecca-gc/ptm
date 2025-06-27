@@ -19,12 +19,10 @@ def ican_parallel(dir):
     sys.argv = ['ican.py', f'--output_path={output}', seqs]
     ican.main()
     rfc.main(output)
-    return 42
 
 def main():
     #data_pipeline.main()
-    hello = Parallel(n_jobs=-1)(delayed(ican_parallel)(dir) for dir in dirs)
-    print(hello)
+    Parallel(n_jobs=-1)(delayed(ican_parallel)(dir) for dir in dirs)
 
 if __name__ == '__main__':
     main()
