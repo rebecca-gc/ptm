@@ -46,13 +46,13 @@ def main(output):
     encodings = os.path.join(output, 'iCAN_level_2_without_hydrogen.csv')
     X = pd.read_csv(encodings, delimiter=',')
     #print(X.head())
-    #print(X.shape)
+    print(X.shape)
 
-    classes = os.path.join(output, 'classes200.txt')
+    classes = os.path.join(output, 'classes.txt')
     y = pd.read_csv(classes, delimiter='\t', header=None)
     y = y.astype('category')
     y = y.to_numpy().ravel()
-    #print(y.shape)
+    print(y.shape)
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=23, test_size=0.1)
 
