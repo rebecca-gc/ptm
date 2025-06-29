@@ -43,6 +43,7 @@ def main(output):
     if os.path.exists(results):
         os.remove(results)
 
+    print(f'rfc for {output}')
     encodings = os.path.join(output, 'iCAN_level_2_without_hydrogen.csv')
     X = pd.read_csv(encodings, delimiter=',')
     #print(X.head())
