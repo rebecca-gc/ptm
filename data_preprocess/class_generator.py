@@ -14,7 +14,7 @@ DIRS = ['data/glycosylation',
 
 
 def generator(positive, negative, factor=1.0):
-    records_pos = [str(record.seq) for record in SeqIO.parse(f'{positive}/merged.fasta', 'fasta')]
+    records_pos = [str(record.seq) for record in SeqIO.parse(f'{positive}/merged3000.fasta', 'fasta')]
     records_neg = [str(record.seq) for record in SeqIO.parse(negative, 'fasta')]
 
     if len(records_pos) < len(records_neg):
