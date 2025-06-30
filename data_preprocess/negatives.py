@@ -42,14 +42,23 @@ def filter_false_negatives(files):
         print(f'Count of common sequences: {len(common_seqs)}')
 
         filtered_path = os.path.join(NO_PTM_DIR, f'filtered_{file}')
+        filtered3000_path = os.path.join(NO_PTM_DIR, f'filtered3000_{file}')
 
         if os.path.exists(filtered_path):
             os.remove(filtered_path)
+
+        if os.path.exists(filtered3000_path):
+            os.remove(filtered3000_path)
 
         with open(filtered_path, 'w') as filtered:
             for record in SeqIO.parse(target_path, 'fasta'):
                 if record.seq not in common_seqs:
                     SeqIO.write(record, filtered, 'fasta')
+
+        with open(filtered3000_path, 'w') as filtered:
+            for record in SeqIO.parse(target_path, 'fasta'):
+                if record.seq not in common_seqs and len(record.seq) <= 3000:
+                    SeqIO.write(record, filtered, 'fasta')                            
 
         filtered_seqs = {str(record.seq) for record in SeqIO.parse(filtered_path, 'fasta')}
         print(f'PTM: {len(compare_seqs)}, NO_PTM: {len(filtered_seqs)}')

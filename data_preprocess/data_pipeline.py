@@ -6,7 +6,7 @@ import class_generator
 
 
 def main():
-    download_all.main()
+    #download_all.main()
     merge.main()
     venn_diagramms.main()
     negatives.main()
