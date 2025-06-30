@@ -57,12 +57,12 @@ def main(output):
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=23, test_size=0.1)
 
-    rf = RandomForestClassifier(random_state=23)
+    rf = RandomForestClassifier(n_jobs=-1, n_estimators=100, random_state=23)
     rf.fit(X_train, y_train)
     y_pred = rf.predict(X_test)
 
     with open(results, 'a') as f:
-        f.write(f'Score: {rf.score(X_test, y_test)}\n\n')
+        f.write(f'Mean accuracy: {rf.score(X_test, y_test)}\n\n')
         f.write(classification_report(y_test, y_pred))
         # print(rf.score(X_test, y_test))
         # print(classification_report(y_test, y_pred))
