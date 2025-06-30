@@ -238,7 +238,7 @@ def ptm_code2(ptm_dir, ptm_code2_word):
 
 def qptm(ptm_dir, ptm):
     filepath = os.path.join(ptm_dir, 'qPTM.fasta')
-    txtpath = '../local_data/qPTM_all_data.txt'
+    txtpath = 'local_data/qPTM_all_data.txt'
 
     uniprot_ids = []
 
@@ -293,7 +293,7 @@ def databases(ptm_dir, swiss_prot_url, query, db_ptm_urls, ptm, ptmd_url, ptmd_w
 def main():
     print('Starting downloads...')
 
-    databases('../data/glycosylation',
+    databases('data/glycosylation',
               'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+AND+%28ft_carbohyd%3AGlcNAc%29%29',
               '"Homo sapiens"[Organism] AND glycosylated[All Fields]',
               ['https://biomics.lab.nycu.edu.tw/dbPTM/download/experiment/C-linked%20Glycosylation.gz',
@@ -305,7 +305,7 @@ def main():
               'glycosylation',
               'glycosylation')
 
-    databases('../data/s_nitrosylation',
+    databases('data/s_nitrosylation',
               'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+AND+%28keyword%3AKW-0702%29%29',
               '"Homo sapiens"[Organism] AND S-nitrosylation[All Fields]',
               ['https://biomics.lab.nycu.edu.tw/dbPTM/download/experiment/S-nitrosylation.gz'],
@@ -314,7 +314,7 @@ def main():
               'S-Nitrosylation',
               'nitrosylation')
 
-    databases('../data/acetylation',
+    databases('data/acetylation',
               'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+AND+%28keyword%3AKW-0007%29%29',
               '"Homo sapiens"[Organism] AND acetylated[All Fields]',
               ['https://biomics.lab.nycu.edu.tw/dbPTM/download/experiment/Acetylation.gz'],
@@ -323,7 +323,7 @@ def main():
               'Acetylation',
               'acetylation')
 
-    databases('../data/methylation',
+    databases('data/methylation',
               'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+AND+%28keyword%3AKW-0488%29%29',
               '"Homo sapiens"[Organism] AND Methylation[All Fields]',
               ['https://biomics.lab.nycu.edu.tw/dbPTM/download/experiment/Methylation.gz'],

@@ -7,10 +7,10 @@ from Bio import SeqIO
 from venn import venn
 
 
-GLYCO_DIR = '../data/glycosylation'
-S_NITRO_DIR = '../data/s_nitrosylation'
-ACET_DIR = '../data/acetylation'
-METHYL_DIR = '../data/methylation'
+GLYCO_DIR = 'data/glycosylation'
+S_NITRO_DIR = 'data/s_nitrosylation'
+ACET_DIR = 'data/acetylation'
+METHYL_DIR = 'data/methylation'
 DIRS = [GLYCO_DIR, S_NITRO_DIR, ACET_DIR, METHYL_DIR]
 
 
@@ -29,7 +29,7 @@ def venn_ptm(): # this shows the sequences which have x ptms
         'Methylation': sets[3],
     }
     venn(dataset)
-    plt.savefig('../data/venn_ptm.jpg')
+    plt.savefig('data/venn_ptm.jpg')
     plt.clf()
 
 
@@ -54,12 +54,12 @@ def venn_disease_ptm(): # of the sequences which are associated with diseases, w
         'Methylation': diseases[3],
     }
     venn(dataset)
-    plt.savefig('../data/venn_disease.jpg')
+    plt.savefig('data/venn_disease.jpg')
     plt.clf()
 
 
 def venn_mim_ids():
-    omim = '../local_data/omim'
+    omim = 'local_data/omim'
     seqs = []
     names = []
 
@@ -93,7 +93,7 @@ def venn_mim_ids():
         names[4]: seqs[4]
     }
     venn(dataset)
-    plt.savefig('../data/venn_disease_overlap5.jpg')
+    plt.savefig('data/venn_disease_overlap5.jpg')
     plt.clf()
 
     dataset = {
@@ -103,7 +103,7 @@ def venn_mim_ids():
         names[4]: seqs[4]
     }
     venn(dataset)
-    plt.savefig('../data/venn_disease_overlap4.jpg')
+    plt.savefig('data/venn_disease_overlap4.jpg')
     plt.clf()
 
 

@@ -5,10 +5,10 @@ from Bio import SeqIO
 import disease
 import matplotlib.pyplot as plt
 
-GLYCO_DIR = '../data/glycosylation'
-S_NITRO_DIR = '../data/s_nitrosylation'
-ACET_DIR = '../data/acetylation'
-METHYL_DIR = '../data/methylation'
+GLYCO_DIR = 'data/glycosylation'
+S_NITRO_DIR = 'data/s_nitrosylation'
+ACET_DIR = 'data/acetylation'
+METHYL_DIR = 'data/methylation'
 
 
 def main():
