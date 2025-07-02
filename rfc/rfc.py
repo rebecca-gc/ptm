@@ -70,6 +70,7 @@ def main(output):
         features = pd.DataFrame(rf.feature_importances_, index=X.columns)
         top10 = features.sort_values(by=features.columns[0], ascending=False).head(10)
         f.write(top10.to_string())
+        f.write('\n')
         # print(features.describe())
 
 
