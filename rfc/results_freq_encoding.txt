@@ -1,0 +1,135 @@
+test
+Mean accuracy: 0.625
+              precision    recall  f1-score   support
+
+           0       0.64      0.73      0.68        22
+           1       0.60      0.50      0.55        18
+
+    accuracy                           0.62        40
+   macro avg       0.62      0.61      0.61        40
+weighted avg       0.62      0.62      0.62        40
+
+Top 10 features with the most influence:
+          0
+K  0.132489
+Y  0.071856
+M  0.060659
+W  0.058223
+S  0.057042
+L  0.053247
+E  0.052626
+F  0.044304
+T  0.044254
+P  0.043880
+
+-----
+-----
+
+glycosylation
+Mean accuracy: 0.7350337268128162
+              precision    recall  f1-score   support
+
+           0       0.72      0.78      0.75      2387
+           1       0.75      0.69      0.72      2357
+
+    accuracy                           0.74      4744
+   macro avg       0.74      0.73      0.73      4744
+weighted avg       0.74      0.74      0.73      4744
+
+Top 10 features with the most influence:
+          0
+T  0.069155
+N  0.065478
+K  0.061209
+E  0.055462
+R  0.052350
+M  0.049984
+V  0.049939
+C  0.049347
+Y  0.047972
+S  0.047865
+
+-----
+-----
+
+s_nitrosylation
+Mean accuracy: 0.7220543806646526
+              precision    recall  f1-score   support
+
+           0       0.73      0.72      0.72       332
+           1       0.72      0.73      0.72       330
+
+    accuracy                           0.72       662
+   macro avg       0.72      0.72      0.72       662
+weighted avg       0.72      0.72      0.72       662
+
+Top 10 features with the most influence:
+          0
+S  0.094692
+D  0.062673
+K  0.061619
+P  0.053074
+V  0.052374
+L  0.051110
+A  0.050075
+I  0.049804
+C  0.047531
+H  0.047089
+
+-----
+-----
+
+acetylation
+Mean accuracy: 0.7274096385542169
+              precision    recall  f1-score   support
+
+           0       0.73      0.72      0.73      1989
+           1       0.72      0.73      0.73      1995
+
+    accuracy                           0.73      3984
+   macro avg       0.73      0.73      0.73      3984
+weighted avg       0.73      0.73      0.73      3984
+
+Top 10 features with the most influence:
+          0
+K  0.122766
+C  0.071175
+E  0.063545
+D  0.062293
+W  0.060612
+L  0.053439
+S  0.042825
+P  0.042311
+A  0.042079
+M  0.042024
+
+-----
+-----
+
+methylation
+Mean accuracy: 0.7781569965870307
+              precision    recall  f1-score   support
+
+           0       0.76      0.80      0.78       584
+           1       0.79      0.75      0.77       588
+
+    accuracy                           0.78      1172
+   macro avg       0.78      0.78      0.78      1172
+weighted avg       0.78      0.78      0.78      1172
+
+Top 10 features with the most influence:
+          0
+K  0.122528
+E  0.081165
+D  0.065668
+I  0.060839
+C  0.058406
+N  0.056146
+W  0.050843
+Y  0.044354
+T  0.042964
+R  0.040488
+
+-----
+-----
+
