@@ -99,7 +99,7 @@ def main():
         axes[2].set_title('Length <= 3000')
 
         # plt.hist(lens, bins=20)
-        # plt.ylabel('Number of Sequences')
+        plt.ylabel('Frequency')
         # plt.title(f'Amount of Sequences with each length {d}')
         # plt.tight_layout()
         # plt.savefig(f'{d}/seq_lens.jpg')
