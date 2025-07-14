@@ -9,18 +9,20 @@ from venn import venn
 
 def venn_ptm(ptms_dir): # this shows the sequences which have x ptms
     sets = []
+    names = []
     for d in os.listdir(ptms_dir):
-        if os.path.isdir(d):
+        if os.path.isdir(os.path.join(ptms_dir,d)):
+            names.append(d)
             seq_set = set()
             filepath = os.path.join(ptms_dir, d, 'merged.fasta')
             for record in SeqIO.parse(filepath, 'fasta'):
                 seq_set.add(record.seq)
             sets.append(seq_set)
     dataset = {
-        'Glycosylation': sets[0],
-        'S-Nitrosylation': sets[1],
-        'Acetylation': sets[2],
-        'Methylation': sets[3],
+        names[0]: sets[0],
+        names[1]: sets[1],
+        names[2]: sets[2],
+        names[3]: sets[3],
     }
     venn(dataset)
     plt.savefig('data/venn_ptm.jpg')
@@ -29,8 +31,10 @@ def venn_ptm(ptms_dir): # this shows the sequences which have x ptms
 
 def venn_disease_ptm(ptms_dir): # of the sequences which are associated with diseases, which ones overlap
     diseases = []
+    names = []
     for d in os.listdir(ptms_dir):
-        if os.path.isdir(d):
+        if os.path.isdir(os.path.join(ptms_dir,d)):
+            names.append(d)
             disease = set()
             # no_disease = set()
             # all_seqs = set()
@@ -43,10 +47,10 @@ def venn_disease_ptm(ptms_dir): # of the sequences which are associated with dis
                 # all_seqs.add(record.seq)
             diseases.append(disease)
     dataset = {
-        'Glycosylation': diseases[0],
-        'S-Nitrosylation': diseases[1],
-        'Acetylation': diseases[2],
-        'Methylation': diseases[3],
+        names[0]: diseases[0],
+        names[1]: diseases[1],
+        names[2]: diseases[2],
+        names[3]: diseases[3],
     }
     venn(dataset)
     plt.savefig('data/venn_ptm_disease.jpg')
