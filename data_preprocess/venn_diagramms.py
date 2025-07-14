@@ -76,7 +76,7 @@ def venn_mim_ids(ptms_dir):
         for d in os.listdir(ptms_dir):
             if os.path.isdir(os.path.join(ptms_dir,d)):
                 counter = 0
-                filepath = os.path.join(d, 'merged.fasta')
+                filepath = os.path.join(ptms_dir, d, 'merged.fasta')
                 for record in SeqIO.parse(filepath, 'fasta'):
                     diseases = re.findall(r'MIM:(\d+)', record.description)
                     for dis in diseases:
