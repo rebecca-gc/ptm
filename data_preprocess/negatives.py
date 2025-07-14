@@ -7,10 +7,10 @@ from Bio import SeqIO
 
 NO_PTM_DIR = 'data/no_ptm'
 
-DIRS = ['data/glycosylation',
-        'data/s_nitrosylation',
-        'data/acetylation',
-        'data/methylation']
+DIRS = ['data/ptms/glycosylation',
+        'data/ptms/s_nitrosylation',
+        'data/ptms/acetylation',
+        'data/ptms/methylation']
 
 
 def swiss_prot(files):
@@ -65,7 +65,7 @@ def filter_false_negatives(files):
 
 
 def main():
-    files = ['no_glyco.fasta', 'no_s_nitro.fasta', 'no_acet.fasta', 'no_methyl.fasta']
+    files = ['no_glycosylation.fasta', 'no_s_nitrosylation.fasta', 'no_acetylation.fasta', 'no_methylation.fasta']
     print('Starting negative downloads...')
     # SwissProt https://www.uniprot.org/
     swiss_prot(files)

@@ -2,19 +2,11 @@ import random
 from Bio import SeqIO
 
 
-NO_PTM_FILES = ['data/no_ptm/filtered3000_no_glyco.fasta',
-                'data/no_ptm/filtered3000_no_s_nitro.fasta',
-                'data/no_ptm/filtered3000_no_acet.fasta',
-                'data/no_ptm/filtered3000_no_methyl.fasta']
-
-DIRS = ['data/glycosylation',
-        'data/s_nitrosylation',
-        'data/acetylation',
-        'data/methylation']
-
-
-def generator(positive, negative, factor=1.0):
-    records_pos = [str(record.seq) for record in SeqIO.parse(f'{positive}/merged3000.fasta', 'fasta')]
+def generator(positive, negative, output, db='', factor=1.0):
+    if '3000' in positive:
+        records_pos = [str(record.seq) for record in SeqIO.parse(positive, 'fasta')]
+    else:
+        records_pos = [str(record.seq) for record in SeqIO.parse(positive, 'fasta') if len(record.seq) <= 3000]
     records_neg = [str(record.seq) for record in SeqIO.parse(negative, 'fasta')]
 
     if len(records_pos) < len(records_neg):
@@ -24,7 +16,7 @@ def generator(positive, negative, factor=1.0):
         random.shuffle(records_pos)
         records_pos = records_pos[:int(len(records_neg)*factor)]
 
-    with open(f'{positive}/classes.txt', 'w') as file:
+    with open(f'{output}/{db}classes.txt', 'w') as file:
         for _ in records_pos:
             file.write('1\n')
         for _ in records_neg:
@@ -32,7 +24,7 @@ def generator(positive, negative, factor=1.0):
 
     print('\nSuccessfully saved classes.txt')
 
-    with open(f'{positive}/seqs.fasta', 'w') as file:
+    with open(f'{output}/{db}seqs.fasta', 'w') as file:
         i = 1
         for record in records_pos:
             file.write(f'>Seq{i}\n{record}\n')
@@ -44,9 +36,8 @@ def generator(positive, negative, factor=1.0):
     print('Successfully saved seqs.fasta\n')
 
 
-def main():
-    for i, positive in enumerate(DIRS):
-        generator(positive,NO_PTM_FILES[i])
+def main(positive, negative, output, db, factor):
+    generator(positive,negative,output, db, factor)
 
 
 if __name__ == '__main__':

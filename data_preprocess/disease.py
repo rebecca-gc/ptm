@@ -14,7 +14,6 @@ import matplotlib.pyplot as plt
 def get_ids(filepath):
     uniprot_ids = []
     other_records = []
-    count = 0
     for record in SeqIO.parse(filepath, 'fasta'):
         if record.id.startswith('sp|') or record.id.startswith('tr|'):
             name = record.id.split('|')[1]
@@ -22,9 +21,8 @@ def get_ids(filepath):
                 name = name[:-2]
             uniprot_ids.append(name)
         else:
-            count += 1
             other_records.append(record)
-    print(f'{count} sequences not in Uniprot')
+    # print(f'{len(other_records)} sequences not in Uniprot -> no disease information')
     return uniprot_ids, other_records
 
 

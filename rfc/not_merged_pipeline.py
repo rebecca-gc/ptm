@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import random
 import threading
 import multiprocessing
 from joblib import Parallel, delayed
@@ -9,12 +10,10 @@ from Bio import SeqIO
 sys.path.append(os.path.abspath('data_preprocess'))
 sys.path.append(os.path.abspath('Source'))
 
-import rfc
 import data_pipeline
+import rfc_x_y
 import ican
 
-
-dirs = ['test', 'glycosylation', 's_nitrosylation', 'acetylation', 'methylation']
 
 def draw_progress(progress_dict, total_steps):
     ESC = '\033'
@@ -45,30 +44,37 @@ def draw_progress(progress_dict, total_steps):
         sys.stdout.flush()
 
 
-def ican_parallel(dir, queue):
-    seqs = os.path.join('data', dir, 'seqs.fasta')
-    output = os.path.join('data', dir)
-    sys.argv = ['ican.py', f'--output_path={output}', seqs]
+def ican_parallel(seq_file, queue):
+    output = os.path.dirname(seq_file)
+    sys.argv = ['ican.py', f'--output_path={output}', seq_file]
 
-    ican.main(
+    X = ican.main(
         queue=queue,
-        smiles_key=f'{dir}/smiles',
-        encode_key=f'{dir}/encode',
+        smiles_key=f'{seq_file}/smiles',
+        encode_key=f'{seq_file}/encode',
     )
 
-    rfc.main(output)
+    y = seq_file.replace('seqs.fasta', 'classes.txt')
+    
+    rfc_x_y.main(X, y)
 
-
-def run_parallel_with_bars():
+def run_parallel_with_bars(ptms_dir):
     def count_fasta_entries(file_path):
         return sum(1 for _ in SeqIO.parse(file_path, 'fasta'))
-    
+        
     steps_total = {}
-    for dir in dirs:
-        fasta_file = os.path.join('data', dir, 'seqs.fasta')
-        x = count_fasta_entries(fasta_file)
-        steps_total[f'{dir}/smiles'] = x
-        steps_total[f'{dir}/encode'] = x
+    seqs = []
+
+    for ptm_dir in os.listdir(ptms_dir):
+        path = os.path.join(ptms_dir, ptm_dir, 'db_seqs_classes')
+        if os.path.isdir(path):
+            for seq in os.listdir(path):
+                if seq.endswith('.fasta'):
+                    fasta_file = os.path.join(path, seq)
+                    seqs.append(fasta_file)
+                    x = count_fasta_entries(fasta_file)
+                    steps_total[f'{fasta_file}/smiles'] = x
+                    steps_total[f'{fasta_file}/encode'] = x
 
     manager = multiprocessing.Manager()
     progress_dict = manager.dict({key: 0 for key in steps_total})
@@ -87,15 +93,16 @@ def run_parallel_with_bars():
     threading.Thread(target=progress_updater, daemon=True).start()
 
     Parallel(n_jobs=-1)(
-        delayed(ican_parallel)(dir, queue) for dir in dirs
+        delayed(ican_parallel)(seq, queue) for seq in seqs
     )
+    # ican_parallel('data/ptms/s_nitrosylation/db_seqs_classes/ptmd_seqs.fasta', queue)
 
     time.sleep(0.5)
 
 
 def main():
-    # data_pipeline.main()
-    run_parallel_with_bars()
+    data_pipeline.main()
+    run_parallel_with_bars('data/ptms')
 
 
 if __name__ == '__main__':
