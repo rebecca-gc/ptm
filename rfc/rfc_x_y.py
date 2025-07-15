@@ -5,13 +5,18 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 
 
-def main(X, y_path):
+def main(X_dict, y_path):
     results = 'rfc/database_results.txt'
 
     #print(f'rfc for {output}')
     #encodings = os.path.join(output, 'iCAN_level_2_without_hydrogen.csv') # !!!!
     #X = pd.read_csv(encodings, delimiter=',')
     #print(X.head())
+    flatten_dict = {}
+    for k in X_dict.keys():
+        flatten_dict[k] = X_dict[k].to_numpy().flatten(order='F')
+    X = pd.DataFrame.from_dict(flatten_dict, orient='index')
+    X = X.reset_index(drop=True)
     print(X.shape)
 
     #classes = os.path.join(output, 'classes.txt') # !!!!
