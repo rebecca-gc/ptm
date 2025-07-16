@@ -1,0 +1,96 @@
+testdb
+Mean accuracy: 0.75
+
+              precision    recall  f1-score   support
+
+           0       0.75      0.75      0.75         4
+           1       0.75      0.75      0.75         4
+
+    accuracy                           0.75         8
+   macro avg       0.75      0.75      0.75         8
+weighted avg       0.75      0.75      0.75         8
+
+Top 10 features with the most influence:
+              0
+8072   0.015402
+10576  0.010957
+2998   0.010045
+7000   0.009947
+9824   0.009867
+9928   0.009773
+9440   0.009673
+13968  0.008769
+2989   0.008407
+6752   0.007622
+testdb
+Mean accuracy: 0.75
+
+              precision    recall  f1-score   support
+
+           0       0.75      0.75      0.75         4
+           1       0.75      0.75      0.75         4
+
+    accuracy                           0.75         8
+   macro avg       0.75      0.75      0.75         8
+weighted avg       0.75      0.75      0.75         8
+
+Top 10 features with the most influence:
+              0
+8072   0.015402
+10576  0.010957
+2998   0.010045
+7000   0.009947
+9824   0.009867
+9928   0.009773
+9440   0.009673
+13968  0.008769
+2989   0.008407
+6752   0.007622
+testdb
+Mean accuracy: 0.75
+
+              precision    recall  f1-score   support
+
+           0       0.75      0.75      0.75         4
+           1       0.75      0.75      0.75         4
+
+    accuracy                           0.75         8
+   macro avg       0.75      0.75      0.75         8
+weighted avg       0.75      0.75      0.75         8
+
+Top 10 features with the most influence:
+              0
+8072   0.015402
+10576  0.010957
+2998   0.010045
+7000   0.009947
+9824   0.009867
+9928   0.009773
+9440   0.009673
+13968  0.008769
+2989   0.008407
+6752   0.007622
+meth
+Mean accuracy: 1.0
+
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00         4
+           1       1.00      1.00      1.00         4
+
+    accuracy                           1.00         8
+   macro avg       1.00      1.00      1.00         8
+weighted avg       1.00      1.00      1.00         8
+
+Top 10 features with the most influence:
+             0
+6016  0.037778
+6496  0.017584
+7704  0.017470
+6176  0.016863
+5736  0.016555
+7624  0.015597
+5208  0.012259
+5772  0.010850
+5656  0.010805
+8280  0.010000

@@ -11,7 +11,7 @@ sys.path.append(os.path.abspath('data_preprocess'))
 sys.path.append(os.path.abspath('Source'))
 
 import data_pipeline
-import rfc_x_y
+import rfc_x_y_wb
 import ican
 
 
@@ -55,8 +55,7 @@ def ican_parallel(seq_file, queue):
     )
 
     y = seq_file.replace('seqs.fasta', 'classes.txt')
-    
-    rfc_x_y.main(X, y)
+    rfc_x_y_wb.main(X, y)
 
 def run_parallel_with_bars(ptms_dir):
     def count_fasta_entries(file_path):
@@ -101,7 +100,7 @@ def run_parallel_with_bars(ptms_dir):
 
 
 def main():
-    data_pipeline.main()
+    #data_pipeline.main()
     run_parallel_with_bars('data/ptms')
 
 
