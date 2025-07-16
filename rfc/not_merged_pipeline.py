@@ -46,12 +46,13 @@ def draw_progress(progress_dict, total_steps):
 
 def ican_parallel(seq_file, queue):
     output = os.path.dirname(seq_file)
+    seq = seq_file.split('/')[-1]
     sys.argv = ['ican.py', f'--output_path={output}', seq_file]
 
     X = ican.main(
         queue=queue,
-        smiles_key=f'{seq_file}/smiles',
-        encode_key=f'{seq_file}/encode',
+        smiles_key=f'{seq}/smiles',
+        encode_key=f'{seq}/encode',
     )
 
     y = seq_file.replace('seqs.fasta', 'classes.txt')
@@ -72,8 +73,8 @@ def run_parallel_with_bars(ptms_dir):
                     fasta_file = os.path.join(path, seq)
                     seqs.append(fasta_file)
                     x = count_fasta_entries(fasta_file)
-                    steps_total[f'{fasta_file}/smiles'] = x
-                    steps_total[f'{fasta_file}/encode'] = x
+                    steps_total[f'{seq}/smiles'] = x
+                    steps_total[f'{seq}/encode'] = x
 
     manager = multiprocessing.Manager()
     progress_dict = manager.dict({key: 0 for key in steps_total})
