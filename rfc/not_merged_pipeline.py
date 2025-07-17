@@ -47,7 +47,7 @@ def draw_progress(progress_dict, total_steps):
 def ican_parallel(seq_file, queue):
     output = os.path.dirname(seq_file)
     seq = seq_file.split('/')[-1]
-    sys.argv = ['ican.py', f'--output_path={output}', seq_file]
+    sys.argv = ['ican.py', f'--output_path={output}', '--alphabet_mode=with_hydrogen', seq_file]
 
     X = ican.main(
         queue=queue,
