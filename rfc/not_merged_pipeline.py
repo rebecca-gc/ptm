@@ -100,7 +100,7 @@ def run_parallel_with_bars(ptms_dir):
 
 def main():
     data_pipeline.main()
-    #run_parallel_with_bars('data/ptms')
+    run_parallel_with_bars('data/ptms')
 
 
 if __name__ == '__main__':
