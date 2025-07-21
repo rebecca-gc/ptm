@@ -7,17 +7,19 @@ import matplotlib.pyplot as plt
 
 
 def main(dir, output):
-    merged_file = os.path.join(dir, 'merged.fasta')
+    merged_file = os.path.join(output, 'merged.fasta')
     if os.path.exists(merged_file):
         os.remove(merged_file)
 
-    merged3000_file = os.path.join(dir, 'merged3000.fasta')
+    merged3000_file = os.path.join(output, 'merged3000.fasta')
     if os.path.exists(merged_file):
         os.remove(merged_file)
 
     records = []
     new_records = []
     rec_without_disease = []
+    labels = []
+    all_lens = []
 
     for filename in os.listdir(dir):
         filepath = os.path.join(dir, filename)
@@ -27,10 +29,14 @@ def main(dir, output):
             new_records.append(record)
         all_records = records + new_records
         all_records = list(set(all_records))
-        removed = (len(records) + len(new_records)) - len(all_records)
+        # removed = (len(records) + len(new_records)) - len(all_records)
         records = all_records
         # print(f'{filename}: {len(new_records)} sequences. {removed} were already there')
         new_records = []
+        labels.append(filename.split('.')[0])
+        lens = [len(record.seq) for record in SeqIO.parse(filepath, 'fasta')]
+        all_lens.append(lens)
+        
 
     removed_duplicates = []
     seqs = []
@@ -80,11 +86,19 @@ def main(dir, output):
     axes[2].set_title('Length <= 3000')
 
     plt.tight_layout()
-    plt.savefig(f'{dir}/seq_lens.jpg')
+    plt.savefig(f'{output}/seq_lens_histo.jpg')
     plt.clf()
 
-    print(f'{dir} Merged succesfully\n')
-    disease.vis_disease(dir)
+    fig, ax = plt.subplots()
+    ax.set_ylabel('Sequence length')
+
+    bplot = ax.boxplot(all_lens, tick_labels=labels)
+    plt.tight_layout()
+    plt.savefig(f'{output}/seq_lens_boxp.jpg')
+    plt.clf()
+
+    print(f'{output} Merged succesfully\n')
+    disease.vis_disease(output)
 
 
 if __name__ == '__main__':

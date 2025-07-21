@@ -42,7 +42,7 @@ def main(X_dict, y_path):
     db_name = y_path.split("_")[-2].split("/")[-1]
 
     wandb.init(
-        project="bachelor-ptm",
+        project="bachelor-ptm2",
         name=f"rf_{db_name}_testsize{test_size}_estimators{n_estimators}",
         config=model_params
     )
@@ -77,7 +77,7 @@ def main(X_dict, y_path):
 
     reshaped_importances = importances.reshape(X_dict[0].shape, order='F')
     fig, ax = plt.subplots(figsize=(12, 6))
-    im = ax.matshow(reshaped_importances, cmap='viridis', aspect='auto')
+    im = ax.matshow(reshaped_importances, cmap='viridis_r', aspect='auto')
 
     if reshaped_importances.shape[0] == 8:
         atom_labels = ["C", "O", "N", "S", "C", "O", "N", "S"]

@@ -1,7 +1,6 @@
 import os
 import sys
 import time
-import random
 import threading
 import multiprocessing
 from joblib import Parallel, delayed
@@ -95,14 +94,13 @@ def run_parallel_with_bars(ptms_dir):
     Parallel(n_jobs=-1)(
         delayed(ican_parallel)(seq, queue) for seq in seqs
     )
-    # ican_parallel('data/ptms/s_nitrosylation/db_seqs_classes/ptmd_seqs.fasta', queue)
 
     time.sleep(0.5)
 
 
 def main():
     data_pipeline.main()
-    run_parallel_with_bars('data/ptms')
+    #run_parallel_with_bars('data/ptms')
 
 
 if __name__ == '__main__':

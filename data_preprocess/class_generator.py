@@ -1,13 +1,28 @@
 import random
+import numpy as np
 from Bio import SeqIO
+import matplotlib.pyplot as plt
 
 
 def generator(positive, negative, output, db='', factor=1.0):
     if '3000' in positive:
         records_pos = [str(record.seq) for record in SeqIO.parse(positive, 'fasta')]
+        records_neg = [str(record.seq) for record in SeqIO.parse(negative, 'fasta')]
     else:
-        records_pos = [str(record.seq) for record in SeqIO.parse(positive, 'fasta') if len(record.seq) <= 3000]
-    records_neg = [str(record.seq) for record in SeqIO.parse(negative, 'fasta')]
+        # records_pos = [str(record.seq) for record in SeqIO.parse(positive, 'fasta') if len(record.seq) <= 3000]
+        lens_pos = [len(record.seq) for record in SeqIO.parse(positive, 'fasta')]
+        x = np.percentile(lens_pos,90)
+        records_pos = [str(record.seq) for record in SeqIO.parse(positive, 'fasta') if len(record.seq) <= x]
+        records_neg = [str(record.seq) for record in SeqIO.parse(negative, 'fasta') if len(record.seq) <= x]
+
+        fig, ax = plt.subplots()
+        ax.set_ylabel('Sequence length')
+
+        lens = [len(record) for record in records_pos]
+        bplot = ax.boxplot(lens, tick_labels=[db])
+        plt.tight_layout()
+        plt.savefig(f'{output}/{db}seq_lens_boxp.jpg')
+        plt.clf()    
 
     if len(records_pos) < len(records_neg):
         random.shuffle(records_neg)
