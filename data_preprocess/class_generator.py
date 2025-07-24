@@ -11,7 +11,7 @@ def generator(positive, negative, output, db='', factor=1.0):
     else:
         # records_pos = [str(record.seq) for record in SeqIO.parse(positive, 'fasta') if len(record.seq) <= 3000]
         lens_pos = [len(record.seq) for record in SeqIO.parse(positive, 'fasta')]
-        x = np.percentile(lens_pos,90)
+        x = np.percentile(lens_pos,95)
         records_pos = [str(record.seq) for record in SeqIO.parse(positive, 'fasta') if len(record.seq) <= x]
         records_neg = [str(record.seq) for record in SeqIO.parse(negative, 'fasta') if len(record.seq) <= x]
 

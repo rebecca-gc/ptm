@@ -67,6 +67,11 @@ def run_parallel_with_bars(ptms_dir):
     for ptm_dir in os.listdir(ptms_dir):
         path = os.path.join(ptms_dir, ptm_dir, 'db_seqs_classes')
         if os.path.isdir(path):
+            fasta_file = os.path.join(ptms_dir, ptm_dir, 'seqs.fasta')
+            seqs.append(fasta_file)
+            x = count_fasta_entries(fasta_file)
+            steps_total['seqs.fasta/smiles'] = x
+            steps_total['seqs.fasta/encode'] = x
             for seq in os.listdir(path):
                 if seq.endswith('.fasta'):
                     fasta_file = os.path.join(path, seq)
