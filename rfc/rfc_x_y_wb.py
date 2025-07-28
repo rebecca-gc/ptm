@@ -49,7 +49,9 @@ def main(X_dict, y_path):
 
     wandb.config.update({"test_size" : test_size,
                     "train_len" : len(X_train),
-                    "test_len" : len(X_test)})
+                    "test_len" : len(X_test),
+                    "database": db_name.split('-')[1],
+                    "ptm": db_name.split('-')[0]})
     
     top_n = 10
     sorted_idx = np.argsort(importances)[::-1]
