@@ -39,7 +39,10 @@ def main(X_dict, y_path):
     importances = rf.feature_importances_
     model_params = rf.get_params()
 
-    db_name = y_path.split("_")[-2].split("/")[-1]
+    if 'db_seqs_classes' in y_path:
+        db_name = y_path.split("_")[-2].split("/")[-1]
+    else:
+        db_name = f'{y_path.split("/")[-2]}_all-all'
 
     wandb.init(
         project="bachelor-ptm2",

@@ -9,12 +9,10 @@ from Bio import SeqIO
 sys.path.append(os.path.abspath('data_preprocess'))
 sys.path.append(os.path.abspath('Source'))
 
-import rfc
+import rfc_x_y_wb
 import data_pipeline
 import ican
 
-
-dirs = ['test', 'glycosylation', 's_nitrosylation', 'acetylation', 'methylation']
 
 def draw_progress(progress_dict, total_steps):
     ESC = '\033'
@@ -45,30 +43,36 @@ def draw_progress(progress_dict, total_steps):
         sys.stdout.flush()
 
 
-def ican_parallel(dir, queue):
-    seqs = os.path.join('data', dir, 'seqs.fasta')
-    output = os.path.join('data', dir)
-    sys.argv = ['ican.py', f'--output_path={output}', seqs]
+def ican_parallel(seq_file, queue):
+    output = os.path.dirname(seq_file)
+    ptm = output.split('/')[-1]
+    sys.argv = ['ican.py', f'--output_path={output}', '--alphabet_mode=with_hydrogen', seq_file]
 
-    ican.main(
+    X = ican.main(
         queue=queue,
-        smiles_key=f'{dir}/smiles',
-        encode_key=f'{dir}/encode',
+        smiles_key=f'{ptm}/smiles',
+        encode_key=f'{ptm}/encode',
     )
 
-    rfc.main(output)
+    y = seq_file.replace('seqs.fasta', 'classes.txt')
+    rfc_x_y_wb.main(X,y)
 
 
-def run_parallel_with_bars():
+def run_parallel_with_bars(ptms_dir):
     def count_fasta_entries(file_path):
         return sum(1 for _ in SeqIO.parse(file_path, 'fasta'))
     
     steps_total = {}
-    for dir in dirs:
-        fasta_file = os.path.join('data', dir, 'seqs.fasta')
-        x = count_fasta_entries(fasta_file)
-        steps_total[f'{dir}/smiles'] = x
-        steps_total[f'{dir}/encode'] = x
+    seqs = []
+
+    for ptm_dir in os.listdir(ptms_dir):
+        path = os.path.join(ptms_dir, ptm_dir)
+        if os.path.isdir(path):
+            fasta_file = os.path.join(ptms_dir, ptm_dir, 'seqs.fasta')
+            seqs.append(fasta_file)
+            x = count_fasta_entries(fasta_file)
+            steps_total[f'{ptm_dir}/smiles'] = x
+            steps_total[f'{ptm_dir}/encode'] = x
 
     manager = multiprocessing.Manager()
     progress_dict = manager.dict({key: 0 for key in steps_total})
@@ -87,7 +91,7 @@ def run_parallel_with_bars():
     threading.Thread(target=progress_updater, daemon=True).start()
 
     Parallel(n_jobs=-1)(
-        delayed(ican_parallel)(dir, queue) for dir in dirs
+        delayed(ican_parallel)(seq, queue) for seq in seqs
     )
 
     time.sleep(0.5)
@@ -95,7 +99,7 @@ def run_parallel_with_bars():
 
 def main():
     # data_pipeline.main()
-    run_parallel_with_bars()
+    run_parallel_with_bars('data/ptms')
 
 
 if __name__ == '__main__':
