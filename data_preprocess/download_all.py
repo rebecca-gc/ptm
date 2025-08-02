@@ -75,24 +75,6 @@ def get_uniprot_seqs_from_names(uniprot_names,filepath): # very slow
     print(f'{failed} entries failed')
     print(f'Downloaded {downloaded} entries and {d_failed} failed to download\n')
 
-#https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28protein_name%3Abla%29+OR+%28gene%3Abla%29%29
-#https://rest.uniprot.org/uniparc/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28%28protein_name%3Aecl%29+OR+%28gene%3Abla%29%29%29
-# def get_records(uniprot_names,filepath):
-#     if os.path.exists(filepath):
-#         os.remove(filepath)
-#     chunk_size = 250
-#     for i in range(0, len(uniprot_names), chunk_size):
-#         chunk = uniprot_names[i:(i + chunk_size)]
-#         query = '+OR+'.join([f'%28organism_id%3A9606%29+AND+%28%28protein_name%3A{name}%29+OR+%28gene%3A{name}%29%29' for name in chunk])
-#         url = f'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28{query}%29'
-#         #print(url)
-#         response = requests.get(url, timeout=30)
-#         if response.ok:
-#             with open(filepath, 'a') as f:
-#                 f.write(response.text)
-#         else:
-#             print('Batch download failed:', response.status_code)
-
 
 def swiss_prot(ptm_dir, url):
     filepath = os.path.join(ptm_dir, 'swissProt.fasta')
@@ -293,8 +275,13 @@ def databases(ptm_dir, swiss_prot_url, query, db_ptm_urls, ptm, ptmd_url, ptmd_w
 def main():
     print('Starting downloads...')
 
-    databases('data/glycosylation',
-              'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+AND+%28ft_carbohyd%3AGlcNAc%29%29',
+    dir_name = 'data/ptms/glycosylation/databases'
+    try:
+        os.makedirs(dir_name)
+    except FileExistsError:
+        print(f"Directory '{dir_name}' already exists.")
+    databases(dir_name,
+              'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+AND+%28keyword%3AKW-0325%29%29',
               '"Homo sapiens"[Organism] AND glycosylated[All Fields]',
               ['https://biomics.lab.nycu.edu.tw/dbPTM/download/experiment/C-linked%20Glycosylation.gz',
               'https://biomics.lab.nycu.edu.tw/dbPTM/download/experiment/N-linked%20Glycosylation.gz',
@@ -305,7 +292,12 @@ def main():
               'glycosylation',
               'glycosylation')
 
-    databases('data/s_nitrosylation',
+    dir_name = 'data/ptms/s_nitrosylation/databases'
+    try:
+        os.makedirs(dir_name)
+    except FileExistsError:
+        print(f"Directory '{dir_name}' already exists.")
+    databases(dir_name,
               'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+AND+%28keyword%3AKW-0702%29%29',
               '"Homo sapiens"[Organism] AND S-nitrosylation[All Fields]',
               ['https://biomics.lab.nycu.edu.tw/dbPTM/download/experiment/S-nitrosylation.gz'],
@@ -314,7 +306,12 @@ def main():
               'S-Nitrosylation',
               'nitrosylation')
 
-    databases('data/acetylation',
+    dir_name = 'data/ptms/acetylation/databases'
+    try:
+        os.makedirs(dir_name)
+    except FileExistsError:
+        print(f"Directory '{dir_name}' already exists.")
+    databases(dir_name,
               'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+AND+%28keyword%3AKW-0007%29%29',
               '"Homo sapiens"[Organism] AND acetylated[All Fields]',
               ['https://biomics.lab.nycu.edu.tw/dbPTM/download/experiment/Acetylation.gz'],
@@ -323,7 +320,12 @@ def main():
               'Acetylation',
               'acetylation')
 
-    databases('data/methylation',
+    dir_name = 'data/ptms/methylation/databases'
+    try:
+        os.makedirs(dir_name)
+    except FileExistsError:
+        print(f"Directory '{dir_name}' already exists.")
+    databases(dir_name,
               'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+AND+%28keyword%3AKW-0488%29%29',
               '"Homo sapiens"[Organism] AND Methylation[All Fields]',
               ['https://biomics.lab.nycu.edu.tw/dbPTM/download/experiment/Methylation.gz'],

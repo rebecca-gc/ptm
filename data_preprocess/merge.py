@@ -11,10 +11,6 @@ def main(dir, output):
     if os.path.exists(merged_file):
         os.remove(merged_file)
 
-    merged3000_file = os.path.join(output, 'merged3000.fasta')
-    if os.path.exists(merged_file):
-        os.remove(merged_file)
-
     records = []
     new_records = []
     rec_without_disease = []
@@ -63,16 +59,6 @@ def main(dir, output):
                     merged.write(f'>{r.description}\n{r.seq}\n')
                     seqs.append(r.seq)
                     lens.append(len(r.seq))
-    
-    with open(merged3000_file, 'w') as merged:
-        for rec in removed_duplicates:
-            if(len(rec[3]) <= 3000):
-                merged.write(f'>{rec[0]}|{rec[1]}{rec[2]}\n{rec[3]}\n')
-        for recs in rec_without_disease:
-            for r in recs:
-                if r.seq not in seqs and len(r.seq) <= 3000:
-                        merged.write(f'>{r.description}\n{r.seq}\n')
-                        seqs.append(r.seq)
 
     fig, axes = plt.subplots(1, 3)
 

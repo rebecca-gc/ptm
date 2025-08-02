@@ -22,7 +22,12 @@ def main():
             class_generator.generator(os.path.join(dir_path, 'merged.fasta'),f'data/no_ptm/filtered_no_{dir}.fasta',dir_path,factor=1.5)
             databases_path = os.path.join(dir_path, 'databases')
             for db in os.listdir(databases_path):
-                class_generator.generator(os.path.join(databases_path, db),f'data/no_ptm/filtered3000_no_{dir}.fasta',os.path.join(dir_path, 'db_seqs_classes'),db=f'{dir}-{db.split(".")[0]}_',factor=1.5)
+                db_seqs_classes = os.path.join(dir_path, 'db_seqs_classes')
+                try:
+                    os.makedirs(db_seqs_classes)
+                except FileExistsError:
+                    print(f"Directory '{db_seqs_classes}' already exists.")
+                class_generator.generator(os.path.join(databases_path, db),f'data/no_ptm/filtered_no_{dir}.fasta',db_seqs_classes,db=f'{dir}-{db.split(".")[0]}_',factor=1.5)
 
 
     print('\nEverything worked! :)\n')

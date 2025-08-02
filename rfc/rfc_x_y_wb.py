@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,8 +11,6 @@ from wandb.sklearn import plot_class_proportions, plot_learning_curve, plot_roc
 
 
 def main(X_dict, y_path):
-    results = 'rfc/database_results.txt'
-
     flatten_dict = {}
     for k in X_dict.keys():
         flatten_dict[k] = X_dict[k].to_numpy().flatten(order='F')
@@ -79,6 +78,8 @@ def main(X_dict, y_path):
         ),
         "classification_report": classification_report(y_test, y_pred, target_names=label_names, output_dict=True)
     })
+    
+    wandb.finish()
 
     reshaped_importances = importances.reshape(X_dict[0].shape, order='F')
     fig, ax = plt.subplots(figsize=(12, 6))
@@ -95,22 +96,16 @@ def main(X_dict, y_path):
     cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
     cbar.set_label("Feature Importance", rotation=270, labelpad=15)
 
-    ax.set_title(f"Feature Importance Heatmap {reshaped_importances.shape}", pad=20)
+    ax.set_title(f"Feature Importance Heatmap ({db_name})", pad=20)
 
     plt.tight_layout()
-    plt.savefig(f'data/feature_importances_{db_name}.jpg')
+    dir_name = 'data/feature_importances'
+    try:
+        os.makedirs(dir_name)
+    except FileExistsError:
+        print(f"Directory '{dir_name}' already exists.")
+    plt.savefig(f'{dir_name}/fi_{db_name}.jpg')
     plt.clf()
-
-    with open(results, 'a') as f:
-        f.write(f'{db_name}\nMean accuracy: {rf.score(X_test, y_test)}\n\n')
-        f.write(classification_report(y_test, y_pred))
-        f.write('\nTop 10 features with the most influence:\n')
-        features = pd.DataFrame(rf.feature_importances_, index=X.columns)
-        top10 = features.sort_values(by=features.columns[0], ascending=False).head(10)
-        f.write(top10.to_string())
-        f.write('\n')
-
-    wandb.finish()
 
 
 if __name__ == '__main__':
