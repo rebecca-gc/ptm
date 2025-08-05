@@ -18,20 +18,21 @@ def main(dir, output):
     all_lens = []
 
     for filename in os.listdir(dir):
-        filepath = os.path.join(dir, filename)
-        with_d, without_d = disease.main(filepath)
-        rec_without_disease.append(without_d)
-        for record in with_d:
-            new_records.append(record)
-        all_records = records + new_records
-        all_records = list(set(all_records))
-        # removed = (len(records) + len(new_records)) - len(all_records)
-        records = all_records
-        # print(f'{filename}: {len(new_records)} sequences. {removed} were already there')
-        new_records = []
-        labels.append(filename.split('.')[0])
-        lens = [len(record.seq) for record in SeqIO.parse(filepath, 'fasta')]
-        all_lens.append(lens)
+        if filename.endswith('.fasta'):
+            filepath = os.path.join(dir, filename)
+            with_d, without_d = disease.main(filepath)
+            rec_without_disease.append(without_d)
+            for record in with_d:
+                new_records.append(record)
+            all_records = records + new_records
+            all_records = list(set(all_records))
+            # removed = (len(records) + len(new_records)) - len(all_records)
+            records = all_records
+            # print(f'{filename}: {len(new_records)} sequences. {removed} were already there')
+            new_records = []
+            labels.append(filename.split('.')[0])
+            lens = [len(record.seq) for record in SeqIO.parse(filepath, 'fasta')]
+            all_lens.append(lens)
         
 
     removed_duplicates = []

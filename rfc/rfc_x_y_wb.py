@@ -10,7 +10,7 @@ from wandb.sklearn import plot_precision_recall, plot_feature_importances
 from wandb.sklearn import plot_class_proportions, plot_learning_curve, plot_roc
 
 
-def main(X_dict, y_path):
+def main(X_dict, y_path, class_imbalance, hydro):
     flatten_dict = {}
     for k in X_dict.keys():
         flatten_dict[k] = X_dict[k].to_numpy().flatten(order='F')
@@ -24,7 +24,7 @@ def main(X_dict, y_path):
     y = y.astype('category')
     y = y.to_numpy().ravel()
     print(y.shape)
-    label_names = ["no_ptm", "has_ptm"]
+    label_names = ['no_ptm', 'has_ptm']
 
     test_size = 0.2
     n_estimators = 100
@@ -39,44 +39,46 @@ def main(X_dict, y_path):
     model_params = rf.get_params()
 
     if 'db_seqs_classes' in y_path:
-        db_name = y_path.split("_")[-2].split("/")[-1]
+        db_name = y_path.split('_')[-2].split('/')[-1]
     else:
         db_name = f'{y_path.split("/")[-2]}_all-all'
 
     wandb.init(
-        project="bachelor-ptm2",
-        name=f"rf_{db_name}_testsize{test_size}_estimators{n_estimators}",
+        project='bachelor-ptm3',
+        name=db_name,
         config=model_params
     )
 
-    wandb.config.update({"test_size" : test_size,
-                    "train_len" : len(X_train),
-                    "test_len" : len(X_test),
-                    "database": db_name.split('-')[1],
-                    "ptm": db_name.split('-')[0]})
+    wandb.config.update({'test_size' : test_size,
+                    'train_len' : len(X_train),
+                    'test_len' : len(X_test),
+                    'database': db_name.split('-')[1],
+                    'ptm': db_name.split('-')[0],
+                    'class_imbalance': class_imbalance,
+                    'with_hydrogen': hydro})
     
     top_n = 10
     sorted_idx = np.argsort(importances)[::-1]
     top_features = [(feature_array[i], importances[i]) for i in sorted_idx[:top_n]]
 
-    table = wandb.Table(data=top_features, columns=["Feature", "Importance"])
+    table = wandb.Table(data=top_features, columns=['Feature', 'Importance'])
 
     wandb.log({
-        "class_proportions": plot_class_proportions(y_train, y_test, label_names),
-        "learning_curve": plot_learning_curve(rf, X_train, y_train),
-        "roc_curve": plot_roc(y_test, y_probas, label_names),
-        "precision_recall": plot_precision_recall(y_test, y_probas, label_names),
-        "feature_importance_builtin": plot_feature_importances(rf),
-        "accuracy": accuracy_score(y_test, y_pred),
-        "confusion_matrix": wandb.plot.confusion_matrix(
+        'class_proportions': plot_class_proportions(y_train, y_test, label_names),
+        'learning_curve': plot_learning_curve(rf, X_train, y_train),
+        'roc_curve': plot_roc(y_test, y_probas, label_names),
+        'precision_recall': plot_precision_recall(y_test, y_probas, label_names),
+        'feature_importance_builtin': plot_feature_importances(rf),
+        'accuracy': accuracy_score(y_test, y_pred),
+        'confusion_matrix': wandb.plot.confusion_matrix(
             y_true=y_test,
             preds=y_pred,
             class_names=label_names
         ),
-        "top_feature_importance": wandb.plot.bar(
-            table, "Feature", "Importance", title=f"Top {top_n} Feature Importances"
+        'top_feature_importance': wandb.plot.bar(
+            table, 'Feature', 'Importance', title=f'Top {top_n} Feature Importances'
         ),
-        "classification_report": classification_report(y_test, y_pred, target_names=label_names, output_dict=True)
+        'classification_report': classification_report(y_test, y_pred, target_names=label_names, output_dict=True)
     })
     
     wandb.finish()
@@ -86,24 +88,20 @@ def main(X_dict, y_path):
     im = ax.matshow(reshaped_importances, cmap='viridis_r', aspect='auto')
 
     if reshaped_importances.shape[0] == 8:
-        atom_labels = ["C", "O", "N", "S", "C", "O", "N", "S"]
+        atom_labels = ['C', 'O', 'N', 'S', 'C', 'O', 'N', 'S']
     elif reshaped_importances.shape[0] == 10:
-        atom_labels = ["H", "C", "O", "N", "S", "H", "C", "O", "N", "S"]
+        atom_labels = ['H', 'C', 'O', 'N', 'S', 'H', 'C', 'O', 'N', 'S']
 
     ax.set_yticks(range(len(atom_labels)))
     ax.set_yticklabels(atom_labels)
 
     cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-    cbar.set_label("Feature Importance", rotation=270, labelpad=15)
+    cbar.set_label('Feature Importance', rotation=270, labelpad=15)
 
-    ax.set_title(f"Feature Importance Heatmap ({db_name})", pad=20)
+    ax.set_title(f'Feature Importance Heatmap ({db_name})', pad=20)
 
-    plt.tight_layout()
+    #plt.tight_layout()
     dir_name = 'data/feature_importances'
-    try:
-        os.makedirs(dir_name)
-    except FileExistsError:
-        print(f"Directory '{dir_name}' already exists.")
     plt.savefig(f'{dir_name}/fi_{db_name}.jpg')
     plt.clf()
 

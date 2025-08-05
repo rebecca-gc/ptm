@@ -18,12 +18,7 @@ def venn_ptm(ptms_dir): # this shows the sequences which have x ptms
             for record in SeqIO.parse(filepath, 'fasta'):
                 seq_set.add(record.seq)
             sets.append(seq_set)
-    dataset = {
-        names[0]: sets[0],
-        names[1]: sets[1],
-        names[2]: sets[2],
-        names[3]: sets[3],
-    }
+    dataset = {name: set_ for name, set_ in zip(names, sets)}
     venn(dataset)
     plt.savefig('data/venn_ptm.jpg')
     plt.clf()
@@ -46,12 +41,7 @@ def venn_disease_ptm(ptms_dir): # of the sequences which are associated with dis
                     # no_disease.add(record.seq)
                 # all_seqs.add(record.seq)
             diseases.append(disease)
-    dataset = {
-        names[0]: diseases[0],
-        names[1]: diseases[1],
-        names[2]: diseases[2],
-        names[3]: diseases[3],
-    }
+    dataset = {name: dis for name, dis in zip(names, diseases)}
     venn(dataset)
     plt.savefig('data/venn_ptm_disease.jpg')
     plt.clf()
@@ -85,23 +75,12 @@ def venn_mim_ids(ptms_dir):
                             seq_set.add(record.seq)
         seqs.append(seq_set)
 
-    dataset = {
-        names[0]: seqs[0],
-        names[1]: seqs[1],
-        names[2]: seqs[2],
-        names[3]: seqs[3],
-        names[4]: seqs[4]
-    }
+    dataset = {name: seq for name, seq in zip(names, seqs)}
     venn(dataset)
     plt.savefig('data/venn_disease_overlap5.jpg')
     plt.clf()
 
-    dataset = {
-        names[0]: seqs[0],
-        names[1]: seqs[1],
-        names[3]: seqs[3],
-        names[4]: seqs[4]
-    }
+    dataset = {name: seq for name, seq in zip(names, seqs) if name != 'parkinson'}
     venn(dataset)
     plt.savefig('data/venn_disease_overlap4.jpg')
     plt.clf()

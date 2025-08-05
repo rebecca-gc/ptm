@@ -55,7 +55,7 @@ def ican_parallel(seq_file, queue):
     )
 
     y = seq_file.replace('seqs.fasta', 'classes.txt')
-    rfc_x_y_wb.main(X,y)
+    rfc_x_y_wb.main(X,y,'1.5','with_hydrogen')
 
 
 def run_parallel_with_bars(ptms_dir):
@@ -98,7 +98,7 @@ def run_parallel_with_bars(ptms_dir):
 
 
 def main():
-    # data_pipeline.main()
+    data_pipeline.main()
     run_parallel_with_bars('data/ptms')
 
 

@@ -275,7 +275,7 @@ def databases(ptm_dir, swiss_prot_url, query, db_ptm_urls, ptm, ptmd_url, ptmd_w
 def main():
     print('Starting downloads...')
 
-    dir_name = '../data/ptms/glycosylation/databases'
+    dir_name = 'data/ptms/glycosylation/databases'
     try:
         os.makedirs(dir_name)
     except FileExistsError:
@@ -292,7 +292,7 @@ def main():
               'glycosylation',
               'glycosylation')
 
-    dir_name = '../data/ptms/s_nitrosylation/databases'
+    dir_name = 'data/ptms/s_nitrosylation/databases'
     try:
         os.makedirs(dir_name)
     except FileExistsError:
@@ -306,7 +306,7 @@ def main():
               'S-Nitrosylation',
               'nitrosylation')
 
-    dir_name = '../data/ptms/acetylation/databases'
+    dir_name = 'data/ptms/acetylation/databases'
     try:
         os.makedirs(dir_name)
     except FileExistsError:
@@ -320,7 +320,7 @@ def main():
               'Acetylation',
               'acetylation')
 
-    dir_name = '../data/ptms/methylation/databases'
+    dir_name = 'data/ptms/methylation/databases'
     try:
         os.makedirs(dir_name)
     except FileExistsError:
