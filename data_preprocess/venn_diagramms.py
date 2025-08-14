@@ -53,27 +53,28 @@ def venn_mim_ids(ptms_dir):
     names = []
 
     for filename in os.listdir(omim):
-        mim_ids = []
-        seq_set = set()
-        names.append(filename.split('.')[0])
+        if filename.endswith('tsv'):
+            mim_ids = []
+            seq_set = set()
+            names.append(filename.split('.')[0])
 
-        filepath = os.path.join(omim, filename)
-        with open(filepath) as file:
-            for line in file:
-                if line[0] == '#' or line[0] == '*' or line[0] == '%':
-                    mim_ids.append(line.split()[0][1:])
+            filepath = os.path.join(omim, filename)
+            with open(filepath) as file:
+                for line in file:
+                    if line[0] == '#' or line[0] == '*' or line[0] == '%':
+                        mim_ids.append(line.split()[0][1:])
 
-        for d in os.listdir(ptms_dir):
-            if os.path.isdir(os.path.join(ptms_dir,d)):
-                counter = 0
-                filepath = os.path.join(ptms_dir, d, 'merged.fasta')
-                for record in SeqIO.parse(filepath, 'fasta'):
-                    diseases = re.findall(r'MIM:(\d+)', record.description)
-                    for dis in diseases:
-                        if dis in mim_ids:
-                            counter += 1
-                            seq_set.add(record.seq)
-        seqs.append(seq_set)
+            for d in os.listdir(ptms_dir):
+                if os.path.isdir(os.path.join(ptms_dir,d)):
+                    counter = 0
+                    filepath = os.path.join(ptms_dir, d, 'merged.fasta')
+                    for record in SeqIO.parse(filepath, 'fasta'):
+                        diseases = re.findall(r'MIM:(\d+)', record.description)
+                        for dis in diseases:
+                            if dis in mim_ids:
+                                counter += 1
+                                seq_set.add(record.seq)
+            seqs.append(seq_set)
 
     dataset = {name: seq for name, seq in zip(names, seqs)}
     venn(dataset)
