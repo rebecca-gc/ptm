@@ -9,6 +9,8 @@ import re
 import requests
 from Bio import SeqIO
 import matplotlib.pyplot as plt
+import os
+import numpy as np
 
 
 def get_ids(filepath):
@@ -76,6 +78,63 @@ def vis_disease(dir_path):
     plt.tight_layout()
     plt.savefig(f'{dir_path}/top10diseases_{dir_path.split("/")[-1]}.jpg')
     plt.clf()
+
+
+def file_generator():
+    ptms_dir = 'data/ptms'
+    omim = 'local_data/omim'
+    seqs = []
+    names = []
+    ys = []
+    mims = []
+
+    acet = [record for record in SeqIO.parse(f'{ptms_dir}/acetylation/merged.fasta', 'fasta')]
+    glyco = [record for record in SeqIO.parse(f'{ptms_dir}/glycosylation/merged.fasta', 'fasta')]
+    methyl = [record for record in SeqIO.parse(f'{ptms_dir}/methylation/merged.fasta', 'fasta')]
+    nitro = [record for record in SeqIO.parse(f'{ptms_dir}/s_nitrosylation/merged.fasta', 'fasta')]
+
+    all_seqs = [acet, glyco, methyl, nitro]
+
+    for i, filename in enumerate(os.listdir(omim)):
+        if not filename.startswith('.'):
+            names.append(filename)
+            filepath = os.path.join(omim, filename)
+            with open(filepath) as file:
+                mim_ids = []
+                for line in file:
+                    if line[0] == '#' or line[0] == '*' or line[0] == '%':
+                        mim_ids.append(line.split()[0][1:])
+            mims.append(mim_ids)
+
+    for i, ptm in enumerate(all_seqs):
+        print(i)
+        for rec in ptm:
+            if rec.seq not in seqs:
+                y = np.zeros(8)
+                y[i] = 1
+                for j in range(i+1,4):
+                    if rec.seq in [record.seq for record in all_seqs[j]]:
+                        y[j] = 1
+                diseases = re.findall(r'MIM:(\d+)', rec.description)
+                for j, mim in enumerate(mims):
+                    if list(set(diseases) & set(mim)):
+                        y[j+4] = 1
+                ys.append(y)
+                seqs.append(rec.seq)
+
+    y_file = 'data/multi_label.txt'
+    with open(y_file, 'w') as file:
+        for y in ys:
+            for x in y:
+                file.write(f'{int(x)} ')
+            file.write('\n')
+    
+    X_file = 'data/disease_seqs.fasta'
+    with open(X_file, 'w') as file:
+        for i, seq in enumerate(seqs):
+            file.write(f'>Seq{i}\n{seq}\n')
+    
+    print(len(seqs))
 
 
 def main(filepath):
