@@ -3,6 +3,7 @@ import download_all
 import merge
 import venn_diagramms
 import negatives
+import cluster
 import class_generator
 import matplotlib.pyplot as plt
 from Bio import SeqIO
@@ -10,19 +11,21 @@ import numpy as np
 
 
 def main():
-    download_all.main()
+    #download_all.main()
     ptms_dir = 'data/ptms'
+    # for dir in os.listdir(ptms_dir):
+    #     dir_path = os.path.join(ptms_dir, dir)
+    #     if os.path.isdir(dir_path):
+    #         databases_path = os.path.join(dir_path, 'databases')
+    #         merge.main(databases_path, dir_path)
+    # venn_diagramms.main(ptms_dir)
+    # negatives.main()
     for dir in os.listdir(ptms_dir):
         dir_path = os.path.join(ptms_dir, dir)
         if os.path.isdir(dir_path):
-            databases_path = os.path.join(dir_path, 'databases')
-            merge.main(databases_path, dir_path)
-    venn_diagramms.main(ptms_dir)
-    negatives.main()
-    for dir in os.listdir(ptms_dir):
-        dir_path = os.path.join(ptms_dir, dir)
-        if os.path.isdir(dir_path):
-            class_generator.generator(os.path.join(dir_path, 'merged.fasta'),f'data/no_ptm/filtered_no_{dir}.fasta',dir_path,factor=1)
+            merged = os.path.join(dir_path, 'merged.fasta')
+            cluster.main(merged)
+            class_generator.generator(merged,f'data/no_ptm/filtered_no_{dir}.fasta',dir_path,factor=1)
             databases_path = os.path.join(dir_path, 'databases')
             db_seqs_classes = os.path.join(dir_path, 'db_seqs_classes')
             try:
