@@ -44,9 +44,10 @@ def draw_progress(progress_dict, total_steps):
 
 
 def ican_parallel(seq_file, queue):
-    output = os.path.dirname(seq_file)
-    ptm = output.split('/')[-1]
-    sys.argv = ['ican.py', f'--output_path={output}', '--alphabet_mode=with_hydrogen', seq_file]
+    output_dir = os.path.dirname(seq_file)
+    ptm = output_dir.split('/')[-1]
+    csv_file = os.path.join(output_dir, f'iCAN_encoding_{ptm}.csv')
+    sys.argv = ['ican.py', f'--output_path={csv_file}', '--alphabet_mode=with_hydrogen', seq_file]
 
     X = ican.main(
         queue=queue,
@@ -55,7 +56,7 @@ def ican_parallel(seq_file, queue):
     )
 
     y = seq_file.replace('seqs.fasta', 'classes.txt')
-    rfc_x_y_wb_cv.main(X,y,'1.5','with_hydrogen')
+    rfc_x_y_wb_cv.main(X,y,'1','with_hydrogen')
 
 
 def run_parallel_with_bars(ptms_dir):

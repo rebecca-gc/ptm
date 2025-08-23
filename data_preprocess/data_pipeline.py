@@ -25,7 +25,8 @@ def main():
         if os.path.isdir(dir_path):
             merged = os.path.join(dir_path, 'merged.fasta')
             cluster.main(merged)
-            class_generator.generator(merged,f'data/no_ptm/filtered_no_{dir}.fasta',dir_path,factor=1)
+            clustered = os.path.join(dir_path, 'clustered.fasta')
+            class_generator.generator(clustered,f'data/no_ptm/clustered_no_{dir}.fasta',dir_path,factor=1)
             databases_path = os.path.join(dir_path, 'databases')
             db_seqs_classes = os.path.join(dir_path, 'db_seqs_classes')
             try:
