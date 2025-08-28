@@ -1,7 +1,15 @@
-import os
+'''
+Random Forest Classifier with cross-validation and feature importance logging
+using W&B.
+
+This module trains a Random Forest classifier on encoded PTM sequences,
+logs model performance metrics, visualizes top features, and saves
+a heatmap of feature importances.
+'''
+
 import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.model_selection import RepeatedStratifiedKFold
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score, matthews_corrcoef
@@ -11,10 +19,29 @@ from wandb.sklearn import plot_class_proportions, plot_learning_curve, plot_roc
 
 
 def get_splits(dataset_size):
+    '''
+    Calculate the number of splits for cross-validation based on dataset size.
+
+    Args:
+        dataset_size (int): Number of samples in the dataset.
+
+    Returns:
+        int: Number of splits for RepeatedStratifiedKFold.
+    '''
     return int(np.round(dataset_size / (0.2 * dataset_size)))
 
 
 def main(X_dict, y_path, class_imbalance, hydro):
+    '''
+    Train Random Forest on encoded PTM features, perform cross-validation,
+    log metrics to W&B, and visualize feature importance.
+
+    Args:
+        X_csv (str): Path to CSV file containing encoded features.
+        y_path (str): Path to class labels file (multi-label or binary).
+        class_imbalance (float): Imbalance factor for the dataset.
+        hydro (bool): Whether hydrogen encoding is included.
+    '''
     X = pd.read_csv(X_dict)
     feature_names = list(X.columns)
     feature_array = np.array(feature_names)
@@ -31,6 +58,7 @@ def main(X_dict, y_path, class_imbalance, hydro):
     for i, (train_index, test_index) in enumerate(cv.split(X, y)):
         X_train, y_train = X.iloc[train_index,:], y[train_index]
         X_test, y_test = X.iloc[test_index,:], y[test_index]
+
         rfc = RandomForestClassifier(n_jobs=-1, n_estimators=100, random_state=42)
         rfc.fit(X_train, y_train)
 
@@ -52,11 +80,10 @@ def main(X_dict, y_path, class_imbalance, hydro):
                         'ptm': ptm,
                         'class_imbalance': class_imbalance,
                         'with_hydrogen': hydro})
-        
+
         top_n = 10
         sorted_idx = np.argsort(importances)[::-1]
         top_features = [(feature_array[i], importances[i]) for i in sorted_idx[:top_n]]
-
         table = wandb.Table(data=top_features, columns=['Feature', 'Importance'])
 
         wandb.log({
@@ -77,7 +104,6 @@ def main(X_dict, y_path, class_imbalance, hydro):
             'classification_report': classification_report(y_test, y_pred, target_names=label_names, output_dict=True),
             'MCC': matthews_corrcoef(y_test, y_pred)
         })
-        
         wandb.finish()
 
     reshaped_importances = importances.reshape(X_dict[0].shape, order='F')
@@ -96,12 +122,6 @@ def main(X_dict, y_path, class_imbalance, hydro):
     cbar.set_label('Feature Importance', rotation=270, labelpad=15)
 
     ax.set_title(f'Feature Importance Heatmap ({ptm})', pad=20)
-
-    #plt.tight_layout()
     dir_name = 'data/feature_importances'
     plt.savefig(f'{dir_name}/fi_{ptm}.jpg')
     plt.clf()
-
-
-if __name__ == '__main__':
-    main()

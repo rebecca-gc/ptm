@@ -1,3 +1,9 @@
+'''
+Module for encoding PTM and non-PTM sequences using iCAN and training
+Random Forest classifiers with cross-validation. Supports parallel
+processing with progress bars.
+'''
+
 import os
 import sys
 import time
@@ -15,6 +21,14 @@ import ican
 
 
 def draw_progress(progress_dict, total_steps):
+    '''
+    Display dynamic terminal progress bars for multiple PTM encoding steps.
+
+    Args:
+        progress_dict (multiprocessing.Manager.dict): Dictionary holding
+            current progress for each key.
+        total_steps (dict): Dictionary with total steps for each key.
+    '''
     ESC = '\033'
     CLEAR = f'{ESC}[2J'
     HIDE_CURSOR = f'{ESC}[?25l'
@@ -26,14 +40,13 @@ def draw_progress(progress_dict, total_steps):
     try:
         while True:
             sys.stdout.write(f'{ESC}[H')
-            for key in sorted(progress_dict.keys()):
+            for key, total in total_steps.items():
                 current = progress_dict[key]
-                total = total_steps[key]
                 percent = current / total
                 bar_length = 40
                 filled = int(bar_length * percent)
-                bar = '█' * filled + '-' * (bar_length - filled)
-                sys.stdout.write(f'{key:30} |{bar}| {percent*100:5.1f}%\n')
+                progress_bar = '█' * filled + '-' * (bar_length - filled)
+                sys.stdout.write(f'{key:30} |{progress_bar}| {percent*100:5.1f}%\n')
             sys.stdout.flush()
             time.sleep(0.1)
             if all(progress_dict[k] >= total_steps[k] for k in progress_dict):
@@ -44,6 +57,14 @@ def draw_progress(progress_dict, total_steps):
 
 
 def ican_parallel(seq_file, queue):
+    '''
+    Run iCAN encoding and Random Forest classification for a single
+    multi-FASTA file, reporting progress to a queue.
+
+    Args:
+        seq_file (str): Path to the multi-FASTA file to encode.
+        queue (multiprocessing.Queue): Queue to report progress increments.
+    '''
     output_dir = os.path.dirname(seq_file)
     ptm = output_dir.split('/')[-1]
     csv_file = os.path.join(output_dir, f'iCAN_encoding_{ptm}.csv')
@@ -60,9 +81,16 @@ def ican_parallel(seq_file, queue):
 
 
 def run_parallel_with_bars(ptms_dir):
+    '''
+    Run iCAN encoding in parallel for all PTM directories, with live
+    progress bars for each PTM's smiles and encoding steps.
+
+    Args:
+        ptms_dir (str): Path to the parent directory containing PTM subdirectories.
+    '''
     def count_fasta_entries(file_path):
         return sum(1 for _ in SeqIO.parse(file_path, 'fasta'))
-    
+
     steps_total = {}
     seqs = []
 
@@ -81,7 +109,7 @@ def run_parallel_with_bars(ptms_dir):
 
     threading.Thread(target=draw_progress, args=(progress_dict, steps_total), daemon=True).start()
 
-    # Queue-Listener
+    # Queue-Listener updates the progress dictionary
     def progress_updater():
         while True:
             key, delta = queue.get()
@@ -99,7 +127,15 @@ def run_parallel_with_bars(ptms_dir):
 
 
 def main():
-    #data_pipeline.main()
+    '''
+    Main function to run the encoding pipeline.
+
+    Steps:
+        1. Optionally run the preprocessing pipeline (commented out).
+        2. Run parallel iCAN encoding and Random Forest classification
+           with live progress bars for all PTM multi-FASTA datasets.
+    '''
+    # data_pipeline.main()
     run_parallel_with_bars('data/ptms')
 
 

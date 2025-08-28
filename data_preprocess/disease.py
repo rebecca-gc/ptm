@@ -1,19 +1,33 @@
-# get disease information
-# https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29+AND+%28cc_disease%3A*%29%29
-# API to get all sequences of proteins related to diseases
+'''
+Module to retrieve disease information from UniProt and generate
+disease-related multi-label datasets for PTMs.
+
+Functions include:
+- Extracting UniProt IDs from multi-FASTA files
+- Downloading disease annotations via UniProt API
+- Visualizing disease frequency
+- Generating multi-label datasets combining PTM and disease info
+'''
 
 import csv
 from io import StringIO
 from collections import Counter
 import re
 import requests
-from Bio import SeqIO
 import matplotlib.pyplot as plt
-import os
-import numpy as np
+from Bio import SeqIO
 
 
 def get_ids(filepath):
+    '''
+    Extract UniProt IDs from a multi-FASTA file.
+
+    Args:
+        filepath (str): Path to a multi-FASTA file.
+
+    Returns:
+        tuple: (list of UniProt IDs, list of other SeqIO records)
+    '''
     uniprot_ids = []
     other_records = []
     for record in SeqIO.parse(filepath, 'fasta'):
@@ -24,11 +38,19 @@ def get_ids(filepath):
             uniprot_ids.append(name)
         else:
             other_records.append(record)
-    # print(f'{len(other_records)} sequences not in Uniprot -> no disease information')
     return uniprot_ids, other_records
 
 
 def get_records(uniprot_ids):
+    '''
+    Download disease annotations for a list of UniProt IDs.
+
+    Args:
+        uniprot_ids (list): List of UniProt IDs.
+
+    Returns:
+        set: Set of tuples containing (accession, entry name, MIM string, sequence)
+    '''
     chunk_size = 500
     records = set()
     for i in range(0, len(uniprot_ids), chunk_size):
@@ -46,12 +68,9 @@ def get_records(uniprot_ids):
                 name = row.get('Entry Name', '')
                 disease = row.get('Involvement in disease', '')
                 mim_ids = re.findall(r'\[MIM:(\d+)', disease)
-                mim_string = ''
-                for m in mim_ids:
-                    mim_string += f' MIM:{m}'
+                mim_string = ' '.join([f'MIM:{m}' for m in mim_ids])
                 seq = row.get('Sequence', '')
-                record = [acc,name,mim_string,seq]
-                records.add(tuple(record))
+                records.add((acc, name, mim_string, seq))
         else:
             print('(Disease) Batch download failed:', response.status_code)
 
@@ -59,6 +78,12 @@ def get_records(uniprot_ids):
 
 
 def vis_disease(dir_path):
+    '''
+    Visualize the frequency of top 10 diseases in a PTM multi-FASTA file.
+
+    Args:
+        dir_path (str): Directory containing 'merged.fasta' for a PTM.
+    '''
     diseases = []
     for record in SeqIO.parse(f'{dir_path}/merged.fasta', 'fasta'):
         if 'MIM:' in record.description:
@@ -68,8 +93,9 @@ def vis_disease(dir_path):
 
     counts = Counter(diseases)
     top10 = counts.most_common(10)
-    labels = [d for d, c in top10]
-    values = [c for d, c in top10]
+    labels = [d for d, _ in top10]
+    values = [c for _, c in top10]
+
     plt.bar(labels, values, color='skyblue', edgecolor='black')
     plt.xlabel('MIM ID of Diseases')
     plt.ylabel('Frequency')
@@ -80,68 +106,16 @@ def vis_disease(dir_path):
     plt.clf()
 
 
-def file_generator():
-    ptms_dir = 'data/ptms'
-    omim = 'local_data/omim'
-    seqs = []
-    names = []
-    ys = []
-    mims = []
-
-    acet = [record for record in SeqIO.parse(f'{ptms_dir}/acetylation/merged.fasta', 'fasta')]
-    glyco = [record for record in SeqIO.parse(f'{ptms_dir}/glycosylation/merged.fasta', 'fasta')]
-    methyl = [record for record in SeqIO.parse(f'{ptms_dir}/methylation/merged.fasta', 'fasta')]
-    nitro = [record for record in SeqIO.parse(f'{ptms_dir}/s_nitrosylation/merged.fasta', 'fasta')]
-
-    all_seqs = [acet, glyco, methyl, nitro]
-
-    for i, filename in enumerate(os.listdir(omim)):
-        if not filename.startswith('.'):
-            names.append(filename)
-            filepath = os.path.join(omim, filename)
-            with open(filepath) as file:
-                mim_ids = []
-                for line in file:
-                    if line[0] == '#' or line[0] == '*' or line[0] == '%':
-                        mim_ids.append(line.split()[0][1:])
-            mims.append(mim_ids)
-
-    for i, ptm in enumerate(all_seqs):
-        print(i)
-        for rec in ptm:
-            if rec.seq not in seqs:
-                y = np.zeros(8)
-                y[i] = 1
-                for j in range(i+1,4):
-                    if rec.seq in [record.seq for record in all_seqs[j]]:
-                        y[j] = 1
-                diseases = re.findall(r'MIM:(\d+)', rec.description)
-                for j, mim in enumerate(mims):
-                    if list(set(diseases) & set(mim)):
-                        y[j+4] = 1
-                ys.append(y)
-                seqs.append(rec.seq)
-
-    y_file = 'data/multi_label.txt'
-    with open(y_file, 'w') as file:
-        for y in ys:
-            for x in y:
-                file.write(f'{int(x)} ')
-            file.write('\n')
-    
-    X_file = 'data/disease_seqs.fasta'
-    with open(X_file, 'w') as file:
-        for i, seq in enumerate(seqs):
-            file.write(f'>Seq{i}\n{seq}\n')
-    
-    print(len(seqs))
-
-
 def main(filepath):
-    ids, other_records =  get_ids(filepath)
+    '''
+    Wrapper function to extract disease records from a PTM multi-FASTA file.
+
+    Args:
+        filepath (str): Path to a PTM multi-FASTA file.
+
+    Returns:
+        tuple: (set of disease records, list of non-UniProt records)
+    '''
+    ids, other_records = get_ids(filepath)
     records = get_records(ids)
     return records, other_records
-
-
-if __name__ == '__main__':
-    main()
