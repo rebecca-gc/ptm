@@ -15,11 +15,7 @@ def get_splits(dataset_size):
 
 
 def main(X_dict, y_path, class_imbalance, hydro):
-    flatten_dict = {}
-    for k in X_dict.keys():
-        flatten_dict[k] = X_dict[k].to_numpy().flatten(order='F')
-    X = pd.DataFrame.from_dict(flatten_dict, orient='index')
-    X = X.reset_index(drop=True)
+    X = pd.read_csv(X_dict)
     feature_names = list(X.columns)
     feature_array = np.array(feature_names)
 

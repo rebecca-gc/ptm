@@ -9,7 +9,7 @@ from Bio import SeqIO
 sys.path.append(os.path.abspath('data_preprocess'))
 sys.path.append(os.path.abspath('Source'))
 
-import rfc_x_y_wb
+import rfc_with_cv
 import data_pipeline
 import ican
 
@@ -44,18 +44,19 @@ def draw_progress(progress_dict, total_steps):
 
 
 def ican_parallel(seq_file, queue):
-    output = os.path.dirname(seq_file)
-    ptm = output.split('/')[-1]
-    sys.argv = ['ican.py', f'--output_path={output}', '--alphabet_mode=with_hydrogen', seq_file]
+    output_dir = os.path.dirname(seq_file)
+    ptm = output_dir.split('/')[-1]
+    csv_file = os.path.join(output_dir, f'iCAN_encoding_{ptm}.csv')
+    sys.argv = ['ican.py', f'--output_path={csv_file}', '--alphabet_mode=with_hydrogen', seq_file]
 
-    X = ican.main(
+    ican.main(
         queue=queue,
         smiles_key=f'{ptm}/smiles',
         encode_key=f'{ptm}/encode',
     )
 
-    y = seq_file.replace('seqs.fasta', 'classes.txt')
-    rfc_x_y_wb.main(X,y,'1.5','with_hydrogen')
+    y_path = seq_file.replace('seqs.fasta', 'classes.txt')
+    rfc_with_cv.main(csv_file, y_path, '1', 'with_hydrogen')
 
 
 def run_parallel_with_bars(ptms_dir):
@@ -98,7 +99,7 @@ def run_parallel_with_bars(ptms_dir):
 
 
 def main():
-    data_pipeline.main()
+    #data_pipeline.main()
     run_parallel_with_bars('data/ptms')
 
 
