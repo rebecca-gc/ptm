@@ -1,8 +1,8 @@
-/venv
 /data
 /local_data
-/data_preprocess/__pycache__
-/rfc/data
-/Source
 /old_code
+/Source
 /wandb
+.*
+__*
+!.gitignore
