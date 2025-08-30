@@ -41,7 +41,7 @@ def get_ids(filepath):
     return uniprot_ids, other_records
 
 
-def get_records(uniprot_ids):
+def get_records(uniprot_ids, chunk_size=100):
     '''
     Download disease annotations for a list of UniProt IDs.
 
@@ -51,15 +51,24 @@ def get_records(uniprot_ids):
     Returns:
         set: Set of tuples containing (accession, entry name, MIM string, sequence)
     '''
-    chunk_size = 500
+    print('Hallo')
     records = set()
+    
+    base_url = 'https://rest.uniprot.org/uniprotkb/stream'
+    fields = 'accession,id,cc_disease,sequence'
+    
     for i in range(0, len(uniprot_ids), chunk_size):
-        chunk = uniprot_ids[i:(i + chunk_size)]
+        chunk = uniprot_ids[i:i + chunk_size]
         query = ' OR '.join([f'accession:{uid}' for uid in chunk])
-        fields = 'accession,id,cc_disease,sequence'
-        url = f'https://rest.uniprot.org/uniprotkb/stream?format=tsv&query={query}&fields={fields}'
-
-        response = requests.get(url, timeout=30)
+        
+        params = {
+            'format': 'tsv',
+            'fields': fields,
+            'query': query
+        }
+        
+        response = requests.get(base_url, params=params, timeout=30)
+        
         if response.ok:
             tsv_data = StringIO(response.text)
             reader = csv.DictReader(tsv_data, delimiter='\t')
@@ -72,7 +81,7 @@ def get_records(uniprot_ids):
                 seq = row.get('Sequence', '')
                 records.add((acc, name, mim_string, seq))
         else:
-            print('(Disease) Batch download failed:', response.status_code)
+            print(f'(Disease) Batch download failed: {response.status_code} - {response.text[:200]}')
 
     return records
 

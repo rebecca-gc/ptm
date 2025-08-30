@@ -79,14 +79,14 @@ def main(input_dir, output_dir):
     axes[2].hist(lens, bins=100, range=[0, 3000])
     axes[2].set_title('Length <= 3000')
     plt.tight_layout()
-    plt.savefig(f'{output_dir}/seq_lens_histo.jpg')
+    plt.savefig(f'{output_dir}/seq_lens_histo.pdf')
     plt.clf()
 
     fig, ax = plt.subplots()
     ax.set_ylabel('Sequence length')
     bplot = ax.boxplot(all_lens, tick_labels=labels)
     plt.tight_layout()
-    plt.savefig(f'{output_dir}/seq_lens_boxp.jpg')
+    plt.savefig(f'{output_dir}/seq_lens_boxp.pdf')
     plt.clf()
 
     print(f'{output_dir} Merged succesfully\n')
