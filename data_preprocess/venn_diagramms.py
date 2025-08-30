@@ -89,7 +89,7 @@ def venn_mim_ids(ptms_dir):
     names = []
 
     for filename in os.listdir(omim_dir):
-        if filename.endswith('tsv'):
+        if filename.endswith('tsv') and filename[0] not in '._':
             mim_ids = []
             seq_set = set()
             names.append(filename.split('.')[0])
