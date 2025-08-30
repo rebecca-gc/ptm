@@ -30,15 +30,15 @@ def main():
     # download_all.main()
 
     ptms_dir = 'data/ptms'
-    for dir in os.listdir(ptms_dir):
-        dir_path = os.path.join(ptms_dir, dir)
-        if os.path.isdir(dir_path):
-            databases_path = os.path.join(dir_path, 'databases')
-            merge.main(databases_path, dir_path)
+    # for dir in os.listdir(ptms_dir):
+    #     dir_path = os.path.join(ptms_dir, dir)
+    #     if os.path.isdir(dir_path):
+    #         databases_path = os.path.join(dir_path, 'databases')
+    #         merge.main(databases_path, dir_path)
 
     venn_diagramms.main(ptms_dir)
 
-    # negatives.main()
+    negatives.main()
 
     # for dir in os.listdir(ptms_dir):
     #     dir_path = os.path.join(ptms_dir, dir)

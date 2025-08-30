@@ -36,7 +36,7 @@ def venn_ptm(ptms_dir):
                 seq_set.add(record.seq)
             sets.append(seq_set)
     dataset = dict(zip(names, sets))
-    colors = ['#1b9e77', '#7570b3', '#e7298a', '#d95f02']
+    colors = ['#7570b3', '#d95f02', '#e7298a', '#1b9e77']
     ax = venn(dataset, legend_loc=None, cmap=colors)
     plt.legend(handles=ax.patches, labels=names, loc='center left', bbox_to_anchor=(1, 0.5))
     plt.savefig('data/venn_ptm.pdf', bbox_inches='tight')
@@ -65,7 +65,7 @@ def venn_disease_ptm(ptms_dir):
                     disease_set.add(record.seq)
             diseases.append(disease_set)
     dataset = dict(zip(names, diseases))
-    colors = ['#1b9e77', '#7570b3', '#e7298a', '#d95f02']
+    colors = ['#7570b3', '#d95f02', '#e7298a', '#1b9e77']
     ax = venn(dataset, legend_loc=None, cmap=colors)
     plt.legend(handles=ax.patches, labels=names, loc='center left', bbox_to_anchor=(1, 0.5))
     plt.savefig('data/venn_ptm_disease.pdf', bbox_inches='tight')
@@ -94,7 +94,7 @@ def venn_mim_ids(ptms_dir):
             seq_set = set()
             names.append(filename.split('.')[0])
             filepath = os.path.join(omim_dir, filename)
-
+            print(filepath)
             with open(filepath) as file:
                 for line in file:
                     if line[0] in '#*%':
