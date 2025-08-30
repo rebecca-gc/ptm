@@ -23,7 +23,7 @@ def venn_ptm(ptms_dir):
         ptms_dir (str): Path to the directory containing PTM subdirectories with merged multi-FASTA files.
     
     Saves:
-        'data/venn_ptm.jpg' containing the Venn diagram of PTM overlaps.
+        'data/venn_ptm.pdf' containing the Venn diagram of PTM overlaps.
     '''
     sets = []
     names = []
@@ -36,8 +36,10 @@ def venn_ptm(ptms_dir):
                 seq_set.add(record.seq)
             sets.append(seq_set)
     dataset = dict(zip(names, sets))
-    venn(dataset)
-    plt.savefig('data/venn_ptm.jpg')
+    colors = ['#1b9e77', '#7570b3', '#e7298a', '#d95f02']
+    ax = venn(dataset, legend_loc=None, cmap=colors)
+    plt.legend(handles=ax.patches, labels=names, loc='center left', bbox_to_anchor=(1, 0.5))
+    plt.savefig('data/venn_ptm.pdf', bbox_inches='tight')
     plt.clf()
 
 
@@ -49,7 +51,7 @@ def venn_disease_ptm(ptms_dir):
         ptms_dir (str): Path to the directory containing PTM subdirectories with merged multi-FASTA files.
     
     Saves:
-        'data/venn_ptm_disease.jpg' containing the Venn diagram of disease-associated PTM sequences.
+        'data/venn_ptm_disease.pdf' containing the Venn diagram of disease-associated PTM sequences.
     '''
     diseases = []
     names = []
@@ -63,8 +65,10 @@ def venn_disease_ptm(ptms_dir):
                     disease_set.add(record.seq)
             diseases.append(disease_set)
     dataset = dict(zip(names, diseases))
-    venn(dataset)
-    plt.savefig('data/venn_ptm_disease.jpg')
+    colors = ['#1b9e77', '#7570b3', '#e7298a', '#d95f02']
+    ax = venn(dataset, legend_loc=None, cmap=colors)
+    plt.legend(handles=ax.patches, labels=names, loc='center left', bbox_to_anchor=(1, 0.5))
+    plt.savefig('data/venn_ptm_disease.pdf', bbox_inches='tight')
     plt.clf()
 
 
@@ -77,8 +81,8 @@ def venn_mim_ids(ptms_dir):
         ptms_dir (str): Path to the directory containing PTM subdirectories with merged multi-FASTA files.
 
     Saves:
-        'data/venn_disease_overlap5.jpg': all diseases
-        'data/venn_disease_overlap4.jpg': all diseases excluding Parkinson's
+        'data/venn_disease_overlap5.pdf': all diseases
+        'data/venn_disease_overlap4.pdf': all diseases excluding Parkinson's
     '''
     omim_dir = 'local_data/omim'
     seqs = []
@@ -107,13 +111,15 @@ def venn_mim_ids(ptms_dir):
             seqs.append(seq_set)
 
     dataset = dict(zip(names, seqs))
-    venn(dataset)
-    plt.savefig('data/venn_disease_overlap5.jpg')
+    ax = venn(dataset, legend_loc=None)
+    plt.legend(handles=ax.patches, labels=names, loc='center left', bbox_to_anchor=(1, 0.5))
+    plt.savefig('data/venn_disease_overlap5.pdf', bbox_inches='tight')
     plt.clf()
 
     dataset = {name: seq for name, seq in zip(names, seqs) if name != 'parkinson'}
-    venn(dataset)
-    plt.savefig('data/venn_disease_overlap4.jpg')
+    ax = venn(dataset, legend_loc=None)
+    plt.legend(handles=ax.patches, labels=names, loc='center left', bbox_to_anchor=(1, 0.5))
+    plt.savefig('data/venn_disease_overlap4.pdf', bbox_inches='tight')
     plt.clf()
 
 

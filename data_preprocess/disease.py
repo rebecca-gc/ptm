@@ -96,13 +96,29 @@ def vis_disease(dir_path):
     labels = [d for d, _ in top10]
     values = [c for _, c in top10]
 
-    plt.bar(labels, values, color='skyblue', edgecolor='black')
+    if 'glycosylation' in dir_path:
+        c = '#66c2a5'
+        e = '#1b9e77'
+    elif 's_nitrosylation' in dir_path:
+        c = '#e78ac3'
+        e = '#e7298a'
+    elif 'acetylation' in dir_path:
+        c = '#fc8d62'
+        e = '#d95f02'
+    elif 'methylation' in dir_path:
+        c = '#8da0cb'
+        e = '#7570b3'
+    else:
+        c = 'black'
+        e = 'black'
+
+    plt.bar(labels, values, color=c, edgecolor=e)
     plt.xlabel('MIM ID of Diseases')
     plt.ylabel('Frequency')
     plt.xticks(rotation=45, ha='right')
     plt.title(f'Frequency of Top 10 Diseases (PTM: {dir_path.split("/")[-1]})')
     plt.tight_layout()
-    plt.savefig(f'{dir_path}/top10diseases_{dir_path.split("/")[-1]}.jpg')
+    plt.savefig(f'{dir_path}/top10diseases_{dir_path.split("/")[-1]}.pdf')
     plt.clf()
 
 

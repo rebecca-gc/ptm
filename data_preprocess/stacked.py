@@ -70,14 +70,23 @@ def plot_cumulative_counts(cumulative_counts, output_dir):
         cumulative_counts (pd.DataFrame): Cumulative counts per PTM per year.
         output_dir (str): Directory to save plots.
     '''
-    os.makedirs(output_dir, exist_ok=True)
+    custom_colors = [
+        '#d95f02',
+        '#1b9e77',
+        '#a6761d',
+        '#e6ab02',
+        '#7570b3',
+        '#e7298a',
+        '#66a61e',
+        '#666666'
+    ]
 
-    cumulative_counts.plot(kind='bar', stacked=True, figsize=(10, 6))
+    cumulative_counts.plot(kind='bar', stacked=True, figsize=(10, 6), color=custom_colors)
     plt.ylabel('Cumulative number of entries')
     plt.title('Cumulative Entries per PTM by Year')
     plt.legend(title='PTM')
     plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, 'cum_counts.jpg'))
+    plt.savefig(os.path.join(output_dir, 'cum_counts.pdf'))
     plt.clf()
 
 
@@ -89,12 +98,23 @@ def plot_cumulative_percentages(cumulative_percentages, output_dir):
         cumulative_percentages (pd.DataFrame): Cumulative percentages per PTM per year.
         output_dir (str): Directory to save plots.
     '''
-    cumulative_percentages.plot(kind='bar', stacked=True, figsize=(10, 6))
+    custom_colors = [
+        '#d95f02',
+        '#1b9e77',
+        '#a6761d',
+        '#e6ab02',
+        '#7570b3',
+        '#e7298a',
+        '#66a61e',
+        '#666666'
+    ]
+
+    cumulative_percentages.plot(kind='bar', stacked=True, figsize=(10, 6), color=custom_colors)
     plt.ylabel('Cumulative % of entries')
     plt.title('Cumulative Distribution of PTMs per Year (Percent Stacked)')
     plt.legend(title='PTM', bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, 'cum_counts_percentage.jpg'))
+    plt.savefig(os.path.join(output_dir, 'cum_counts_percentage.pdf'))
     plt.clf()
 
 
@@ -110,10 +130,10 @@ def main():
         4. Plot stacked bar charts for cumulative percentages.
 
     Output:
-        - '../data/all_ptm/cum_counts.jpg'
-        - '../data/all_ptm/cum_counts_percentage.jpg'
+        - 'data/all_ptm/cum_counts.jpg'
+        - 'data/all_ptm/cum_counts_percentage.jpg'
     '''
-    output_dir = '../data/all_ptm'
+    output_dir = 'data/all_ptm'
 
     ptms = ['phosphorylation', 'acetylation', 'methylation', 'hydroxylation', 'nitrosylation', 'glycosylation', 'ubl_conjugation', 'lipoprotein']
 
