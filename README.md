@@ -1,5 +1,5 @@
 # Project Title
-### Machine Learning Data for Classification using iCAN for Post Translational Modifications in Human Proteins
+### Classfication of Human Protein Post-Translational Modifications encoded with iCAN using a Random Forest Classifier
 
 ## Table of Contents
 
@@ -34,7 +34,7 @@ The code is written in Python 3.11.13 with the following libraries installed:
 |wandb|0.21.0|
 
 ## Data
-The protein sequences used to predict the Post Translational Modifications are collected from seven different databases.
+The protein sequences used to predict the Post-Translational Modifications are collected from seven different databases.
 - SwissProt
 - NCBI
 - dbPTM
