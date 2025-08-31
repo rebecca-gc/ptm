@@ -79,7 +79,7 @@ def filter_false_negatives(files):
 
         filtered_seqs = {str(record.seq) for record in SeqIO.parse(filtered_path, 'fasta')}
         print(f'PTM: {len(compare_seqs)}, NO_PTM: {len(filtered_seqs)}, before Filter: {len(target_seqs)}')
-        print(f'percent shared/filtered {len(filtered_seqs)/len(target_seqs)}')
+        print(f'percent shared/filtered {len(filtered_seqs)/len(target_seqs)} \n')
 
 
 def main():
@@ -91,7 +91,7 @@ def main():
     files = ['no_glycosylation.fasta', 'no_s_nitrosylation.fasta', 'no_acetylation.fasta', 'no_methylation.fasta']
 
     # swiss_prot(files)
-    print('Downloads of negative sequences successful\n')
+    # print('Downloads of negative sequences successful\n')
 
     filter_false_negatives(files)
     print('\nFiltered out all false negatives')

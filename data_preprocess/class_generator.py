@@ -27,7 +27,9 @@ def main(positive, negative, output, db='', factor=1.0):
     lens_pos = [len(record.seq) for record in SeqIO.parse(positive, 'fasta')]
     cutoff = np.percentile(lens_pos,95)
     records_pos = [str(record.seq) for record in SeqIO.parse(positive, 'fasta') if len(record.seq) <= cutoff]
+    print(f'{positive} {len(records_pos)}')
     records_neg = [str(record.seq) for record in SeqIO.parse(negative, 'fasta') if len(record.seq) <= cutoff]
+    print(f'{negative} {len(records_neg)}')
 
     if len(records_pos) < len(records_neg):
         random.shuffle(records_neg)
