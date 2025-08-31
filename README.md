@@ -14,7 +14,7 @@
 - [Aleksandar Anžel](https://github.com/AAnzel)
 - [Rebecca Grevens Carpi](https://github.com/rebecca-gc)
 
-Created by the [Visualisation group](https://visualization.group/), which is part of the Centre for Artifical Intelligence in Public Health Research (ZKI-PH) of the Robert Koch-Institute. This repository was developed as part of a bachelor thesis
+Created by the [Visualisation group](https://visualization.group/), which is part of the Centre for Artifical Intelligence in Public Health Research (ZKI-PH) of the Robert Koch-Institute. This repository was developed as part of a bachelor thesis.
 
 ## Dependencies
 The code is written in Python 3.11.13 with the following libraries installed:
@@ -61,6 +61,8 @@ These databases were integrated, filtered, and processed into positive and negat
 |[data_preprocess/venn_diagrams.py](./data_preprocess/venn_diagrams.py)|General visualization script; generates Venn diagrams of sequence overlaps across PTMs and diseases.|
 |[data_preprocess/stacked.py](./data_preprocess/stacked.py)|Creates stacked bar plots showing the distribution of 8 main PTMs in UniProt over time.|
 
+|Script|Description|
+|---|---|
 |[rfc/](./rfc/)|Scripts related to feature encoding and classification with Random Forests.|
 |[rfc/encoding_pipeline.py](./rfc/encoding_pipeline.py)|Converts sequences into machine learning features via iCAN for Random Forest training.|
 |[rfc/rfc_with_cv.py](./rfc/rfc_with_cv.py)|Trains and evaluates the Random Forest classifier with cross-validation. Reports performance metrics.|
