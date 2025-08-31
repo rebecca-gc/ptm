@@ -15,7 +15,7 @@ This script:
 import os
 import download_all
 import merge
-import venn_diagramms
+import venn_diagrams
 import negatives
 import cluster
 import class_generator
@@ -36,7 +36,7 @@ def main():
     #         databases_path = os.path.join(dir_path, 'databases')
     #         merge.main(databases_path, dir_path)
 
-    # venn_diagramms.main(ptms_dir)
+    # venn_diagrams.main(ptms_dir)
 
     negatives.main()
 
