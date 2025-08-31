@@ -80,7 +80,7 @@ def main():
     #         merged = os.path.join(dir_path, 'merged.fasta')
     #         cluster.main(merged)
 
-    #         clustered = os.path.join(dir_path, 'clustered.fasta')
+            clustered = os.path.join(dir_path, 'clustered.fasta')
             class_generator.main(clustered, f'data/no_ptm/clustered_no_{ptm}.fasta', dir_path, factor=1)
 
     # os.makedirs('data/feature_importances', exist_ok=True)
