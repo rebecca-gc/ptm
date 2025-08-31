@@ -90,8 +90,8 @@ def main():
 
     files = ['no_glycosylation.fasta', 'no_s_nitrosylation.fasta', 'no_acetylation.fasta', 'no_methylation.fasta']
 
-    # swiss_prot(files)
-    # print('Downloads of negative sequences successful\n')
+    swiss_prot(files)
+    print('Downloads of negative sequences successful\n')
 
     filter_false_negatives(files)
     print('\nFiltered out all false negatives')
