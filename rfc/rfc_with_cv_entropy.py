@@ -59,7 +59,7 @@ def main(X_dict, y_path, class_imbalance, hydro):
         X_train, y_train = X.iloc[train_index,:], y[train_index]
         X_test, y_test = X.iloc[test_index,:], y[test_index]
 
-        rfc = RandomForestClassifier(n_jobs=-1, n_estimators=100, random_state=42)
+        rfc = RandomForestClassifier(n_jobs=-1, n_estimators=100, criterion='entropy', random_state=42)
         rfc.fit(X_train, y_train)
 
         y_pred = rfc.predict(X_test)
@@ -80,7 +80,7 @@ def main(X_dict, y_path, class_imbalance, hydro):
                         'ptm': ptm,
                         'class_imbalance': class_imbalance,
                         'with_hydrogen': hydro,
-                        'criterion' : 'gini'})
+                        'criterion' : 'entropy'})
 
         top_n = 10
         sorted_idx = np.argsort(importances)[::-1]
@@ -124,5 +124,5 @@ def main(X_dict, y_path, class_imbalance, hydro):
 
     ax.set_title(f'Feature Importance Heatmap ({ptm})', pad=20)
     dir_name = 'data/feature_importances'
-    plt.savefig(f'{dir_name}/fi_{ptm}.pdf')
+    plt.savefig(f'{dir_name}/fi_info_{ptm}.pdf')
     plt.clf()
