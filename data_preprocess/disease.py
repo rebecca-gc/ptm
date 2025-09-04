@@ -9,11 +9,13 @@ Functions include:
 - Generating multi-label datasets combining PTM and disease info
 '''
 
+import os
 import csv
 from io import StringIO
 from collections import Counter
 import re
 import requests
+import pandas as pd
 import matplotlib.pyplot as plt
 from Bio import SeqIO
 
@@ -128,6 +130,69 @@ def vis_disease(dir_path):
     plt.title(f'Frequency of Top 10 Diseases (PTM: {dir_path.split("/")[-1]})')
     plt.tight_layout()
     plt.savefig(f'{dir_path}/top10diseases_{dir_path.split("/")[-1]}.pdf')
+    plt.clf()
+
+
+def disease_stacked(ptms_dir):
+    diseases_per_ptm = dict()
+    for ptm in os.listdir(ptms_dir):
+        ptm_path = os.path.join(ptms_dir, ptm)
+        if os.path.isdir(ptm_path):
+            diseases = []
+            for record in SeqIO.parse(f'{ptm_path}/merged.fasta', 'fasta'):
+                if 'MIM:' in record.description:
+                    parts = record.description.split(' MIM:')
+                    for disease_part in parts[1:]:
+                        diseases.append(disease_part)
+            diseases_per_ptm[ptm] = diseases
+
+    all_mims = []
+    for ptm, mim_list in diseases_per_ptm.items():
+        all_mims.extend(mim_list)
+    
+    n = 10
+    mim_counts = Counter(all_mims)
+    top_mims = [mim for mim, _ in mim_counts.most_common(n)]
+
+    df = pd.DataFrame(0, index=top_mims, columns=diseases_per_ptm.keys())
+    for ptm, mim_list in diseases_per_ptm.items():
+        counts = Counter(mim_list)
+        for mim in top_mims:
+            df.loc[mim, ptm] = counts.get(mim, 0)
+    
+    face_colors = {
+        'glycosylation': '#66c2a5',
+        's_nitrosylation': '#e78ac3',
+        'acetylation': '#fc8d62',
+        'methylation': '#8da0cb'
+    }
+    edge_colors = {
+        'glycosylation': '#1b9e77',
+        's_nitrosylation': '#e7298a',
+        'acetylation': '#d95f02',
+        'methylation': '#7570b3'
+    }
+
+    fig, ax = plt.subplots(figsize=(10,5))
+    bottom = [0]*len(top_mims)
+    for ptm in df.columns:
+        ax.bar(
+            df.index,
+            df[ptm],
+            bottom=bottom,
+            color=face_colors.get(ptm, 'grey'),
+            edgecolor=edge_colors.get(ptm, 'black'),
+            label=ptm
+        )
+        bottom = [i+j for i,j in zip(bottom, df[ptm])]
+    
+    ax.set_xlabel('MIM ID')
+    ax.set_ylabel('Count')
+    ax.set_title(f'Top {n} MIM IDs by PTM')
+    ax.legend()
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.savefig(f'{ptms_dir}/top10diseases.pdf')
     plt.clf()
 
 
