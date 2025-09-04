@@ -134,6 +134,13 @@ def vis_disease(dir_path):
 
 
 def disease_stacked(ptms_dir):
+    '''
+    Plot the top 10 most frequent MIM IDs for each PTM as a stacked bar chart.
+
+    Args:
+        ptms_dir (str): Directory containing PTM subdirectories with 'merged.fasta' files.
+    '''
+
     diseases_per_ptm = dict()
     for ptm in os.listdir(ptms_dir):
         ptm_path = os.path.join(ptms_dir, ptm)
