@@ -67,17 +67,19 @@ def ican_parallel(seq_file, queue):
     '''
     output_dir = os.path.dirname(seq_file)
     ptm = output_dir.split('/')[-1]
-    csv_file = os.path.join(output_dir, f'iCAN_encoding_{ptm}')
-    sys.argv = ['ican.py', f'--output_path={csv_file}', '--alphabet_mode=with_hydrogen', seq_file]
+    csv_dir = os.path.join(output_dir, f'iCAN_encoding_{ptm}')
+    # sys.argv = ['ican.py', f'--output_path={csv_dir}', '--alphabet_mode=with_hydrogen', seq_file]
 
-    ican.main(
-        queue=queue,
-        smiles_key=f'{ptm}/smiles',
-        encode_key=f'{ptm}/encode',
-    )
+    # ican.main(
+    #     queue=queue,
+    #     smiles_key=f'{ptm}/smiles',
+    #     encode_key=f'{ptm}/encode',
+    # )
+
 
     y_path = seq_file.replace('seqs.fasta', 'classes.txt')
-    # rfc_with_cv.main(csv_file, y_path, '1', 'with_hydrogen')
+    X_path = f'{csv_dir}/iCAN_level_2_with_hydrogen.csv'
+    rfc_with_cv.main(X_path, y_path, '1', 'with_hydrogen')
 
 
 def run_parallel_with_bars(ptms_dir):
