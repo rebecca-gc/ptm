@@ -107,14 +107,17 @@ def main(X_dict, y_path, class_imbalance, hydro):
         })
         wandb.finish()
 
-    reshaped_importances = importances.reshape(X.shape, order='F')
+    n_atoms = 10 if hydro == 'with_hydrogen' else 8
+    n_positions = importances.shape[0] // n_atoms
+
+    reshaped_importances = importances.reshape(n_atoms, n_positions, order='F')
     fig, ax = plt.subplots(figsize=(12, 6))
     im = ax.matshow(reshaped_importances, cmap='Greys', aspect='auto')
 
-    if reshaped_importances.shape[0] == 8:
-        atom_labels = ['C', 'O', 'N', 'S', 'C', 'O', 'N', 'S']
-    elif reshaped_importances.shape[0] == 10:
+    if n_atoms == 10:
         atom_labels = ['H', 'C', 'O', 'N', 'S', 'H', 'C', 'O', 'N', 'S']
+    else:
+        atom_labels = ['C', 'O', 'N', 'S', 'C', 'O', 'N', 'S']
 
     ax.set_yticks(range(len(atom_labels)))
     ax.set_yticklabels(atom_labels)

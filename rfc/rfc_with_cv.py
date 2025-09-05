@@ -56,8 +56,6 @@ def main(X_dict, y_path, class_imbalance, hydro):
     cv = RepeatedStratifiedKFold(n_splits=get_splits(X.shape[0]), n_repeats=10, random_state=42)
 
     for i, (train_index, test_index) in enumerate(cv.split(X, y)):
-        if i > 1:
-            continue
         X_train, y_train = X.iloc[train_index,:], y[train_index]
         X_test, y_test = X.iloc[test_index,:], y[test_index]
 
