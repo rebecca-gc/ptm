@@ -71,20 +71,22 @@ def plot_cumulative_counts(cumulative_counts, output_dir):
         output_dir (str): Directory to save plots.
     '''
     custom_colors = [
-        '#d95f02',
-        '#1b9e77',
-        '#a6761d',
-        '#e6ab02',
-        '#7570b3',
-        '#e7298a',
-        '#66a61e',
-        '#666666'
+        '#fc8d62',
+        '#66c2a5',
+        '#e5c494',
+        '#ffd92f',
+        '#8da0cb',
+        '#e78ac3',
+        '#a6d854',
+        '#b3b3b3'
     ]
 
-    cumulative_counts.plot(kind='bar', stacked=True, figsize=(10, 6), color=custom_colors)
+    cumulative_counts.plot(kind='bar', stacked=True, figsize=(10, 6), color=custom_colors, zorder=2)
     plt.ylabel('Cumulative number of entries')
     plt.title('Cumulative Entries per PTM by Year')
     plt.legend(title='PTM')
+    plt.xticks(rotation=45)
+    plt.grid(axis='y', linestyle='--', alpha=0.7, zorder=1)
     plt.tight_layout()
     plt.savefig(os.path.join(output_dir, 'cum_counts.pdf'))
     plt.clf()
@@ -99,20 +101,21 @@ def plot_cumulative_percentages(cumulative_percentages, output_dir):
         output_dir (str): Directory to save plots.
     '''
     custom_colors = [
-        '#d95f02',
-        '#1b9e77',
-        '#a6761d',
-        '#e6ab02',
-        '#7570b3',
-        '#e7298a',
-        '#66a61e',
-        '#666666'
+        '#fc8d62',
+        '#66c2a5',
+        '#e5c494',
+        '#ffd92f',
+        '#8da0cb',
+        '#e78ac3',
+        '#a6d854',
+        '#b3b3b3'
     ]
 
     cumulative_percentages.plot(kind='bar', stacked=True, figsize=(10, 6), color=custom_colors)
     plt.ylabel('Cumulative % of entries')
     plt.title('Cumulative Distribution of PTMs per Year (Percent Stacked)')
     plt.legend(title='PTM', bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.xticks(rotation=45)
     plt.tight_layout()
     plt.savefig(os.path.join(output_dir, 'cum_counts_percentage.pdf'))
     plt.clf()
