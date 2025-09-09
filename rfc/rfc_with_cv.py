@@ -129,6 +129,6 @@ def main(X_dict, y_path, class_imbalance, hydro):
 
     # ax.set_title(f'Feature Importance Heatmap ({ptm})', pad=20)
     dir_name = 'data/feature_importances'
-    plt.rcParams.update({'xtick.labelsize': 14, 'ytick.labelsize': 14})
+    plt.rcParams.update({'xtick.labelsize': 16, 'ytick.labelsize': 16})
     plt.savefig(f'{dir_name}/fi_{ptm}.pdf')
     plt.clf()
