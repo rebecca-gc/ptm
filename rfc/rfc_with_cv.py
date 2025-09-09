@@ -56,6 +56,7 @@ def main(X_dict, y_path, class_imbalance, hydro):
     cv = RepeatedStratifiedKFold(n_splits=get_splits(X.shape[0]), n_repeats=10, random_state=42)
 
     for i, (train_index, test_index) in enumerate(cv.split(X, y)):
+        print(i)
         if i != 0:
             break
         X_train, y_train = X.iloc[train_index,:], y[train_index]
@@ -132,3 +133,4 @@ def main(X_dict, y_path, class_imbalance, hydro):
     dir_name = 'data/feature_importances'
     plt.savefig(f'{dir_name}/fi_{ptm}.pdf')
     plt.clf()
+    print('saved')

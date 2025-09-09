@@ -79,6 +79,7 @@ def ican_parallel(seq_file, queue):
 
     y_path = seq_file.replace('seqs.fasta', 'classes.txt')
     X_path = f'{csv_dir}/iCAN_level_2_with_hydrogen.csv'
+    print('start')
     rfc_with_cv.main(X_path, y_path, '1', 'with_hydrogen')
 
 
