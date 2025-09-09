@@ -21,74 +21,74 @@ def main(input_dir, output_dir):
     output_dir : str
         Directory to save the merged multi-FASTA file and visualizations.
     '''
-    # merged_file = os.path.join(output_dir, 'merged.fasta')
-    # if os.path.exists(merged_file):
-    #     os.remove(merged_file)
+    merged_file = os.path.join(output_dir, 'merged.fasta')
+    if os.path.exists(merged_file):
+        os.remove(merged_file)
 
-    # records = []
-    # new_records = []
-    # rec_without_disease = []
-    # labels = []
-    # all_lens = []
+    records = []
+    new_records = []
+    rec_without_disease = []
+    labels = []
+    all_lens = []
 
-    # for filename in os.listdir(input_dir):
-    #     if filename.endswith('.fasta'):
-    #         filepath = os.path.join(input_dir, filename)
-    #         with_d, without_d = disease.main(filepath)
-    #         rec_without_disease.append(without_d)
-    #         for record in with_d:
-    #             new_records.append(record)
-    #         all_records = records + new_records
-    #         all_records = list(set(all_records))
-    #         records = all_records
-    #         new_records = []
-    #         labels.append(filename.split('.')[0])
-    #         lens = [len(record.seq) for record in SeqIO.parse(filepath, 'fasta')]
-    #         all_lens.append(lens)
+    for filename in os.listdir(input_dir):
+        if filename.endswith('.fasta'):
+            filepath = os.path.join(input_dir, filename)
+            with_d, without_d = disease.main(filepath)
+            rec_without_disease.append(without_d)
+            for record in with_d:
+                new_records.append(record)
+            all_records = records + new_records
+            all_records = list(set(all_records))
+            records = all_records
+            new_records = []
+            labels.append(filename.split('.')[0])
+            lens = [len(record.seq) for record in SeqIO.parse(filepath, 'fasta')]
+            all_lens.append(lens)
 
-    # removed_duplicates = []
-    # seen_seqs = []
-    # for rec in records:
-    #     if rec[3] not in seen_seqs:
-    #         seen_seqs.append(rec[3])
-    #         removed_duplicates.append(rec)
-    #     else:
-    #         for i, sublist in enumerate(removed_duplicates):
-    #             if rec[3] == sublist[3]:
-    #                 mims = sublist[2] + rec[2]
-    #                 removed_duplicates.pop(i)
-    #                 removed_duplicates.append([rec[0], rec[1], mims, rec[3]])
+    removed_duplicates = []
+    seen_seqs = []
+    for rec in records:
+        if rec[3] not in seen_seqs:
+            seen_seqs.append(rec[3])
+            removed_duplicates.append(rec)
+        else:
+            for i, sublist in enumerate(removed_duplicates):
+                if rec[3] == sublist[3]:
+                    mims = sublist[2] + rec[2]
+                    removed_duplicates.pop(i)
+                    removed_duplicates.append([rec[0], rec[1], mims, rec[3]])
 
-    # lens = []
-    # with open(merged_file, 'w') as merged:
-    #     for rec in removed_duplicates:
-    #         merged.write(f'>{rec[0]}|{rec[1]}{rec[2]}\n{rec[3]}\n')
-    #         lens.append(len(rec[3]))
-    #     for recs in rec_without_disease:
-    #         for r in recs:
-    #             if r.seq not in seen_seqs:
-    #                 merged.write(f'>{r.description}\n{r.seq}\n')
-    #                 seen_seqs.append(r.seq)
-    #                 lens.append(len(r.seq))
+    lens = []
+    with open(merged_file, 'w') as merged:
+        for rec in removed_duplicates:
+            merged.write(f'>{rec[0]}|{rec[1]}{rec[2]}\n{rec[3]}\n')
+            lens.append(len(rec[3]))
+        for recs in rec_without_disease:
+            for r in recs:
+                if r.seq not in seen_seqs:
+                    merged.write(f'>{r.description}\n{r.seq}\n')
+                    seen_seqs.append(r.seq)
+                    lens.append(len(r.seq))
 
-    # fig, axes = plt.subplots(1, 3)
-    # axes[0].hist(lens, bins=100)
-    # axes[0].set_title('All sequences')
-    # axes[1].hist(lens, bins=100, range=[0, 5000])
-    # axes[1].set_title('Length <= 5000')
-    # axes[2].hist(lens, bins=100, range=[0, 3000])
-    # axes[2].set_title('Length <= 3000')
-    # plt.tight_layout()
-    # plt.savefig(f'{output_dir}/seq_lens_histo.pdf')
-    # plt.clf()
+    fig, axes = plt.subplots(1, 3)
+    axes[0].hist(lens, bins=100)
+    axes[0].set_title('All sequences')
+    axes[1].hist(lens, bins=100, range=[0, 5000])
+    axes[1].set_title('Length <= 5000')
+    axes[2].hist(lens, bins=100, range=[0, 3000])
+    axes[2].set_title('Length <= 3000')
+    plt.tight_layout()
+    plt.savefig(f'{output_dir}/seq_lens_histo.pdf')
+    plt.clf()
 
-    # fig, ax = plt.subplots()
-    # ax.set_ylabel('Sequence length')
-    # bplot = ax.boxplot(all_lens, tick_labels=labels)
-    # plt.tight_layout()
-    # plt.savefig(f'{output_dir}/seq_lens_boxp.pdf')
-    # plt.clf()
+    fig, ax = plt.subplots()
+    ax.set_ylabel('Sequence length')
+    bplot = ax.boxplot(all_lens, tick_labels=labels)
+    plt.tight_layout()
+    plt.savefig(f'{output_dir}/seq_lens_boxp.pdf')
+    plt.clf()
 
-    # print(f'{output_dir} Merged succesfully\n')
+    print(f'{output_dir} Merged succesfully\n')
 
     disease.vis_disease(output_dir)
