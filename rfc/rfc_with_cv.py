@@ -114,6 +114,7 @@ def main(X_dict, y_path, class_imbalance, hydro):
 
     reshaped_importances = importances.reshape(n_atoms, n_positions, order='F')
     fig, ax = plt.subplots(figsize=(10, 6))
+    plt.rcParams.update({'xtick.labelsize': 16, 'ytick.labelsize': 16})
     im = ax.matshow(reshaped_importances, cmap='Greys', aspect='auto')
 
     if n_atoms == 10:
@@ -129,6 +130,5 @@ def main(X_dict, y_path, class_imbalance, hydro):
 
     # ax.set_title(f'Feature Importance Heatmap ({ptm})', pad=20)
     dir_name = 'data/feature_importances'
-    plt.rcParams.update({'xtick.labelsize': 16, 'ytick.labelsize': 16})
     plt.savefig(f'{dir_name}/fi_{ptm}.pdf')
     plt.clf()

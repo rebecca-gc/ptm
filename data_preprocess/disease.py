@@ -123,11 +123,12 @@ def vis_disease(dir_path):
         c = 'black'
         e = 'black'
 
+    plt.figure(figsize=(5, 4))
     plt.bar(labels, values, color=c, edgecolor=e)
-    plt.xlabel('MIM ID of Diseases')
-    plt.ylabel('Frequency')
-    plt.xticks(rotation=45, ha='right')
-    plt.title(f'Frequency of Top 10 Diseases (PTM: {dir_path.split("/")[-1]})')
+    plt.xlabel('MIM ID of Diseases', fontsize=14)
+    plt.ylabel('Frequency', fontsize=14)
+    plt.xticks(rotation=45, ha='right', fontsize=12)
+    # plt.title(f'Frequency of Top 10 Diseases (PTM: {dir_path.split("/")[-1]})')
     plt.tight_layout()
     plt.savefig(f'{dir_path}/top10diseases_{dir_path.split("/")[-1]}.pdf')
     plt.clf()
@@ -193,9 +194,9 @@ def disease_stacked(ptms_dir):
         )
         bottom = [i+j for i,j in zip(bottom, df[ptm])]
     
-    ax.set_xlabel('MIM ID')
-    ax.set_ylabel('Count')
-    ax.set_title(f'Top {n} MIM IDs by PTM')
+    ax.set_xlabel('MIM ID of Diseases')
+    ax.set_ylabel('Frequency')
+    # ax.set_title(f'Top {n} MIM IDs by PTM')
     ax.legend()
     plt.xticks(rotation=45)
     plt.tight_layout()
