@@ -115,7 +115,6 @@ def main(X_dict, y_path, class_imbalance, hydro):
 
     reshaped_importances = importances.reshape(n_atoms, n_positions, order='F')
     fig, ax = plt.subplots(figsize=(10, 6))
-    plt.rcParams.update({'xtick.labelsize': 16, 'ytick.labelsize': 16})
     im = ax.matshow(reshaped_importances, cmap='Greys', aspect='auto')
 
     if n_atoms == 10:
@@ -125,9 +124,10 @@ def main(X_dict, y_path, class_imbalance, hydro):
 
     ax.set_yticks(range(len(atom_labels)))
     ax.set_yticklabels(atom_labels)
+    ax.tick_params(axis='both', labelsize=14)
 
     cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-    cbar.set_label('Feature Importance', rotation=270, labelpad=15)
+    cbar.set_label('Feature Importance', rotation=270, labelpad=15, fontsize=14)
 
     # ax.set_title(f'Feature Importance Heatmap ({ptm})', pad=20)
     dir_name = 'data/feature_importances'
