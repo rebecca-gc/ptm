@@ -28,7 +28,7 @@ from Bio import SeqIO
 def main():
     '''Run the full PTM preprocessing pipeline.'''
 
-    download_all.main()
+    # download_all.main()
 
     ptms_dir = 'data/ptms'
     
