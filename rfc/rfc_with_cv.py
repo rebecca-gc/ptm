@@ -56,6 +56,8 @@ def main(X_dict, y_path, class_imbalance, hydro):
     cv = RepeatedStratifiedKFold(n_splits=get_splits(X.shape[0]), n_repeats=10, random_state=42)
 
     for i, (train_index, test_index) in enumerate(cv.split(X, y)):
+        if i != 0:
+            break
         X_train, y_train = X.iloc[train_index,:], y[train_index]
         X_test, y_test = X.iloc[test_index,:], y[test_index]
 
@@ -67,51 +69,51 @@ def main(X_dict, y_path, class_imbalance, hydro):
         importances = rfc.feature_importances_
         model_params = rfc.get_params()
 
-        wandb.init(
-            project='bachelor-ptm4',
-            name=ptm,
-            config=model_params,
-            reinit=True
-        )
+        # wandb.init(
+        #     project='bachelor-ptm4',
+        #     name=ptm,
+        #     config=model_params,
+        #     reinit=True
+        # )
 
-        wandb.config.update({'test_size' : 0.2,
-                        'train_len' : len(X_train),
-                        'test_len' : len(X_test),
-                        'ptm': ptm,
-                        'class_imbalance': class_imbalance,
-                        'with_hydrogen': hydro,
-                        'criterion' : 'gini'})
+        # wandb.config.update({'test_size' : 0.2,
+        #                 'train_len' : len(X_train),
+        #                 'test_len' : len(X_test),
+        #                 'ptm': ptm,
+        #                 'class_imbalance': class_imbalance,
+        #                 'with_hydrogen': hydro,
+        #                 'criterion' : 'gini'})
 
-        top_n = 10
-        sorted_idx = np.argsort(importances)[::-1]
-        top_features = [(feature_array[i], importances[i]) for i in sorted_idx[:top_n]]
-        table = wandb.Table(data=top_features, columns=['Feature', 'Importance'])
+        # top_n = 10
+        # sorted_idx = np.argsort(importances)[::-1]
+        # top_features = [(feature_array[i], importances[i]) for i in sorted_idx[:top_n]]
+        # table = wandb.Table(data=top_features, columns=['Feature', 'Importance'])
 
-        wandb.log({
-            'class_proportions': plot_class_proportions(y_train, y_test, label_names),
-            'learning_curve': plot_learning_curve(rfc, X_train, y_train),
-            'roc_curve': plot_roc(y_test, y_probas, label_names),
-            'precision_recall': plot_precision_recall(y_test, y_probas, label_names),
-            'feature_importance_builtin': plot_feature_importances(rfc),
-            'accuracy': accuracy_score(y_test, y_pred),
-            'confusion_matrix': wandb.plot.confusion_matrix(
-                y_true=y_test,
-                preds=y_pred,
-                class_names=label_names
-            ),
-            'top_feature_importance': wandb.plot.bar(
-                table, 'Feature', 'Importance', title=f'Top {top_n} Feature Importances'
-            ),
-            'classification_report': classification_report(y_test, y_pred, target_names=label_names, output_dict=True),
-            'MCC': matthews_corrcoef(y_test, y_pred)
-        })
-        wandb.finish()
+        # wandb.log({
+        #     'class_proportions': plot_class_proportions(y_train, y_test, label_names),
+        #     'learning_curve': plot_learning_curve(rfc, X_train, y_train),
+        #     'roc_curve': plot_roc(y_test, y_probas, label_names),
+        #     'precision_recall': plot_precision_recall(y_test, y_probas, label_names),
+        #     'feature_importance_builtin': plot_feature_importances(rfc),
+        #     'accuracy': accuracy_score(y_test, y_pred),
+        #     'confusion_matrix': wandb.plot.confusion_matrix(
+        #         y_true=y_test,
+        #         preds=y_pred,
+        #         class_names=label_names
+        #     ),
+        #     'top_feature_importance': wandb.plot.bar(
+        #         table, 'Feature', 'Importance', title=f'Top {top_n} Feature Importances'
+        #     ),
+        #     'classification_report': classification_report(y_test, y_pred, target_names=label_names, output_dict=True),
+        #     'MCC': matthews_corrcoef(y_test, y_pred)
+        # })
+        # wandb.finish()
 
     n_atoms = 10 if hydro == 'with_hydrogen' else 8
     n_positions = importances.shape[0] // n_atoms
 
     reshaped_importances = importances.reshape(n_atoms, n_positions, order='F')
-    fig, ax = plt.subplots(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(10, 6))
     im = ax.matshow(reshaped_importances, cmap='Greys', aspect='auto')
 
     if n_atoms == 10:
@@ -125,7 +127,8 @@ def main(X_dict, y_path, class_imbalance, hydro):
     cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
     cbar.set_label('Feature Importance', rotation=270, labelpad=15)
 
-    ax.set_title(f'Feature Importance Heatmap ({ptm})', pad=20)
+    # ax.set_title(f'Feature Importance Heatmap ({ptm})', pad=20)
     dir_name = 'data/feature_importances'
+    plt.rcParams.update({'xtick.labelsize': 14, 'ytick.labelsize': 14})
     plt.savefig(f'{dir_name}/fi_{ptm}.pdf')
     plt.clf()
