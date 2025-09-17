@@ -82,13 +82,6 @@ def main(input_dir, output_dir):
     plt.savefig(f'{output_dir}/seq_lens_histo.pdf')
     plt.clf()
 
-    fig, ax = plt.subplots()
-    ax.set_ylabel('Sequence length')
-    bplot = ax.boxplot(all_lens, tick_labels=labels)
-    plt.tight_layout()
-    plt.savefig(f'{output_dir}/seq_lens_boxp.pdf')
-    plt.clf()
-
     print(f'{output_dir} Merged succesfully\n')
 
     disease.vis_disease(output_dir)

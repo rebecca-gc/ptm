@@ -53,7 +53,6 @@ def get_records(uniprot_ids, chunk_size=100):
     Returns:
         set: Set of tuples containing (accession, entry name, MIM string, sequence)
     '''
-    print('Hallo')
     records = set()
     
     base_url = 'https://rest.uniprot.org/uniprotkb/stream'
