@@ -173,12 +173,12 @@ def disease_stacked(ptms_dir):
         'acetylation': '#fc8d62',
         'methylation': '#8da0cb'
     }
-    edge_colors = {
-        'glycosylation': '#1b9e77',
-        's_nitrosylation': '#e7298a',
-        'acetylation': '#d95f02',
-        'methylation': '#7570b3'
-    }
+    # edge_colors = {
+    #     'glycosylation': '#1b9e77',
+    #     's_nitrosylation': '#e7298a',
+    #     'acetylation': '#d95f02',
+    #     'methylation': '#7570b3'
+    # }
 
     fig, ax = plt.subplots(figsize=(10,5))
     bottom = [0]*len(top_mims)
@@ -188,7 +188,8 @@ def disease_stacked(ptms_dir):
             df[ptm],
             bottom=bottom,
             color=face_colors.get(ptm, 'grey'),
-            edgecolor=edge_colors.get(ptm, 'black'),
+            # edgecolor='edge_colors.get(ptm, 'black')',
+            edgecolor='black',
             label=ptm
         )
         bottom = [i+j for i,j in zip(bottom, df[ptm])]

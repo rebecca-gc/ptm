@@ -38,48 +38,48 @@ def main():
     #         databases_path = os.path.join(dir_path, 'databases')
     #         merge.main(databases_path, dir_path)
 
-    # disease.disease_stacked(ptms_dir)
+    disease.disease_stacked(ptms_dir)
     # venn_diagrams.main(ptms_dir)
 
     # negatives.main()
 
-    for ptm in os.listdir(ptms_dir):
-        dir_path = os.path.join(ptms_dir, ptm)
-        if os.path.isdir(dir_path):
-            databases_path = os.path.join(dir_path, 'databases')
-            labels = []
-            all_lens100 = []
-            all_lens95 = []
-            for db in os.listdir(databases_path):
-                if db.endswith('.fasta'):
-                    filepath = os.path.join(databases_path, db)
-                    labels.append(db.split('.')[0])
-                    lens_100 = [len(record.seq) for record in SeqIO.parse(filepath, 'fasta')]
-                    all_lens100.append(lens_100)
-                    cutoff = np.percentile(lens_100, 95)
-                    lens_95 = [y for y in lens_100 if y <= cutoff]
-                    all_lens95.append(lens_95)
-                    print(f'{filepath} {max(lens_100)} {max(lens_95)} len: {len(lens_100)}')
-                    short_seqs = [str(record.seq) for record in SeqIO.parse(filepath, 'fasta') if len(record.seq) <= 10]
-                    print(short_seqs)
+    # for ptm in os.listdir(ptms_dir):
+    #     dir_path = os.path.join(ptms_dir, ptm)
+    #     if os.path.isdir(dir_path):
+    #         databases_path = os.path.join(dir_path, 'databases')
+    #         labels = []
+    #         all_lens100 = []
+    #         all_lens95 = []
+    #         for db in os.listdir(databases_path):
+    #             if db.endswith('.fasta'):
+    #                 filepath = os.path.join(databases_path, db)
+    #                 labels.append(db.split('.')[0])
+    #                 lens_100 = [len(record.seq) for record in SeqIO.parse(filepath, 'fasta')]
+    #                 all_lens100.append(lens_100)
+    #                 cutoff = np.percentile(lens_100, 95)
+    #                 lens_95 = [y for y in lens_100 if y <= cutoff]
+    #                 all_lens95.append(lens_95)
+    #                 print(f'{filepath} {max(lens_100)} {max(lens_95)} len: {len(lens_100)}')
+    #                 short_seqs = [str(record.seq) for record in SeqIO.parse(filepath, 'fasta') if len(record.seq) <= 10]
+    #                 print(short_seqs)
 
-            fig, ax = plt.subplots(figsize=(5, 6))
-            ax.set_ylabel('Sequence length', fontsize=14)
-            bplot = ax.boxplot(all_lens95, tick_labels=labels)
-            plt.xticks(rotation=45)
-            ax.tick_params(axis='both', labelsize=14)
-            plt.tight_layout()
-            plt.savefig(f'{dir_path}/seq_lens_boxp_95.pdf')
-            plt.clf()
+    #         fig, ax = plt.subplots(figsize=(5, 6))
+    #         ax.set_ylabel('Sequence length', fontsize=14)
+    #         bplot = ax.boxplot(all_lens95, tick_labels=labels)
+    #         plt.xticks(rotation=45)
+    #         ax.tick_params(axis='both', labelsize=14)
+    #         plt.tight_layout()
+    #         plt.savefig(f'{dir_path}/seq_lens_boxp_95.pdf')
+    #         plt.clf()
 
-            fig, ax = plt.subplots(figsize=(5, 6))
-            ax.set_ylabel('Sequence length', fontsize=14)
-            bplot = ax.boxplot(all_lens100, tick_labels=labels)
-            plt.xticks(rotation=45)
-            ax.tick_params(axis='both', labelsize=14)
-            plt.tight_layout()
-            plt.savefig(f'{dir_path}/seq_lens_boxp.pdf')
-            plt.clf()
+    #         fig, ax = plt.subplots(figsize=(5, 6))
+    #         ax.set_ylabel('Sequence length', fontsize=14)
+    #         bplot = ax.boxplot(all_lens100, tick_labels=labels)
+    #         plt.xticks(rotation=45)
+    #         ax.tick_params(axis='both', labelsize=14)
+    #         plt.tight_layout()
+    #         plt.savefig(f'{dir_path}/seq_lens_boxp.pdf')
+    #         plt.clf()
         
     #         filepath = os.path.join(dir_path, 'merged.fasta')
     #         unique = sum(1 for _ in SeqIO.parse(filepath, "fasta"))
