@@ -181,8 +181,10 @@ def disease_stacked(ptms_dir):
     # }
 
     fig, ax = plt.subplots(figsize=(10,5))
+    ptm_order = ['acetylation', 'glycosylation', 'methylation', 's_nitrosylation']
+    ptm_order = [ptm for ptm in ptm_order if ptm in df.columns]
     bottom = [0]*len(top_mims)
-    for ptm in df.columns:
+    for ptm in ptm_order:
         ax.bar(
             df.index,
             df[ptm],
