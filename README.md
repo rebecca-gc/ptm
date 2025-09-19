@@ -14,7 +14,7 @@
 - [Aleksandar Anžel](https://github.com/AAnzel)
 - [Rebecca Grevens Carpi](https://github.com/rebecca-gc)
 
-Created by the [Visualisation group](https://visualization.group/), which is part of the Centre for Artifical Intelligence in Public Health Research (ZKI-PH) of the Robert Koch-Institute. This repository was developed as part of a bachelor thesis.
+Created by the [Visualization group](https://visualization.group/), which is part of the Centre for Artifical Intelligence in Public Health Research (ZKI-PH) of the Robert Koch-Institute. This repository was developed as part of a bachelor thesis.
 
 ## Dependencies
 The code is written in Python 3.11.13 with the following libraries installed:
@@ -46,7 +46,7 @@ The protein sequences used to predict the Post-Translational Modifications are c
 These databases were integrated, filtered, and processed into positive and negative datasets for machine learning classification. Preprocessing steps included merging, deduplication, false negative removal, clustering, and sequence-length filtering. Full details are described in the thesis.
 
 ## Code
-### The repository is organized into two main directories:
+The repository is organized into two main directories:
 
 |Script|Description|
 |---|---|
