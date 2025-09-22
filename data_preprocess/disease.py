@@ -127,7 +127,6 @@ def vis_disease(dir_path):
     plt.xlabel('MIM ID of Diseases', fontsize=14)
     plt.ylabel('Frequency', fontsize=14)
     plt.xticks(rotation=45, ha='right', fontsize=12)
-    # plt.title(f'Frequency of Top 10 Diseases (PTM: {dir_path.split("/")[-1]})')
     plt.tight_layout()
     plt.savefig(f'{dir_path}/top10diseases_{dir_path.split("/")[-1]}.pdf')
     plt.clf()
@@ -173,12 +172,6 @@ def disease_stacked(ptms_dir):
         'acetylation': '#fc8d62',
         'methylation': '#8da0cb'
     }
-    # edge_colors = {
-    #     'glycosylation': '#1b9e77',
-    #     's_nitrosylation': '#e7298a',
-    #     'acetylation': '#d95f02',
-    #     'methylation': '#7570b3'
-    # }
 
     fig, ax = plt.subplots(figsize=(10,5))
     ptm_order = ['acetylation', 'glycosylation', 'methylation', 's_nitrosylation']
@@ -190,7 +183,6 @@ def disease_stacked(ptms_dir):
             df[ptm],
             bottom=bottom,
             color=face_colors.get(ptm, 'grey'),
-            # edgecolor='edge_colors.get(ptm, 'black')',
             edgecolor='black',
             label=ptm
         )
@@ -198,7 +190,6 @@ def disease_stacked(ptms_dir):
     
     ax.set_xlabel('MIM ID of Diseases')
     ax.set_ylabel('Frequency')
-    # ax.set_title(f'Top {n} MIM IDs by PTM')
     ax.legend()
     plt.xticks(rotation=45)
     plt.tight_layout()
