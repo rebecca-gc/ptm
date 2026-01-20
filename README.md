@@ -48,7 +48,7 @@ The protein sequences used to predict the Post-Translational Modifications are c
 - dbPTM
 - ptmd
 - PTMCode2
-- qPTM
+- qPTM (Note: requires data access inquiry and has to be downloaded manually)
 - Unipep
 
 These databases were integrated, filtered, and processed into positive and negative datasets for machine learning classification. Preprocessing steps included merging, deduplication, false negative removal, clustering, and sequence-length filtering. Full details are described in the thesis.
