@@ -131,6 +131,7 @@ dmypy.json
 
 /data
 /local_data
+/test
 /old_code
 /Source
 /wandb

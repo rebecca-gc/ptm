@@ -370,10 +370,11 @@ def databases(
     ptmd(ptm_dir, ptm, ptmd_url, ptmd_word)
     ptm_code2(ptm_dir, ptm_code2_word)
 
-    if ptm != "S-Nitrosylation":
-        qptm(ptm_dir, ptm)
-        if ptm == "Glycosylation":
-            unipep(ptm_dir)
+    # TODO: Uncomment once the data is available
+    # if ptm != "S-Nitrosylation":
+    #     qptm(ptm_dir, ptm)
+    #     if ptm == "Glycosylation":
+    #         unipep(ptm_dir)
 
 
 def main():
@@ -446,7 +447,7 @@ def main():
         ptmd_word,
         ptm_code2_word,
     ) in ptm_configs:
-        dir_name = os.path.join("test", ptm_name, "databases")
+        dir_name = os.path.join("data", ptm_name, "databases")
         os.makedirs(dir_name, exist_ok=True)
 
         print("=====\t", ptmd_word, "\t=====")
