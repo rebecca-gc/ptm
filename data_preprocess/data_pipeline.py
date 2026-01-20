@@ -1,4 +1,4 @@
-'''
+"""
 Main pipeline for PTM dataset preparation and preprocessing.
 
 This script:
@@ -10,32 +10,33 @@ This script:
 6. Generates class labels for positives and negatives.
 7. Computes and visualizes sequence length distributions (with 95th-percentile cutoff).
 8. Prepares directories for downstream feature importances.
-'''
+"""
 
 import os
-import download_all
-import merge
-import disease
-import venn_diagrams
-import negatives
-import cluster
+
 import class_generator
-import numpy as np
+import cluster
+import disease
+import download_all
 import matplotlib.pyplot as plt
+import merge
+import negatives
+import numpy as np
+import venn_diagrams
 from Bio import SeqIO
 
 
 def main():
-    '''Run the full PTM preprocessing pipeline.'''
+    """Run the full PTM preprocessing pipeline."""
 
     download_all.main()
 
-    ptms_dir = 'data/ptms'
-    
+    ptms_dir = "data/ptms"
+
     for ptm in os.listdir(ptms_dir):
         dir_path = os.path.join(ptms_dir, ptm)
         if os.path.isdir(dir_path):
-            databases_path = os.path.join(dir_path, 'databases')
+            databases_path = os.path.join(dir_path, "databases")
             merge.main(databases_path, dir_path)
 
     disease.disease_stacked(ptms_dir)
@@ -46,47 +47,61 @@ def main():
     for ptm in os.listdir(ptms_dir):
         dir_path = os.path.join(ptms_dir, ptm)
         if os.path.isdir(dir_path):
-            databases_path = os.path.join(dir_path, 'databases')
+            databases_path = os.path.join(dir_path, "databases")
             labels = []
             all_lens100 = []
             all_lens95 = []
             for db in os.listdir(databases_path):
-                if db.endswith('.fasta'):
+                if db.endswith(".fasta"):
                     filepath = os.path.join(databases_path, db)
-                    labels.append(db.split('.')[0])
-                    lens_100 = [len(record.seq) for record in SeqIO.parse(filepath, 'fasta')]
+                    labels.append(db.split(".")[0])
+                    lens_100 = [
+                        len(record.seq)
+                        for record in SeqIO.parse(filepath, "fasta")
+                    ]
                     all_lens100.append(lens_100)
                     cutoff = np.percentile(lens_100, 95)
                     lens_95 = [y for y in lens_100 if y <= cutoff]
                     all_lens95.append(lens_95)
-                    print(f'{filepath} {max(lens_100)} {max(lens_95)} len: {len(lens_100)}')
-                    short_seqs = [str(record.seq) for record in SeqIO.parse(filepath, 'fasta') if len(record.seq) <= 10]
+                    print(
+                        f"{filepath} {max(lens_100)} {max(lens_95)} len: {len(lens_100)}"
+                    )
+                    short_seqs = [
+                        str(record.seq)
+                        for record in SeqIO.parse(filepath, "fasta")
+                        if len(record.seq) <= 10
+                    ]
                     print(short_seqs)
 
             fig, ax = plt.subplots(figsize=(5, 6))
-            ax.set_ylabel('Sequence length', fontsize=14)
+            ax.set_ylabel("Sequence length", fontsize=14)
             bplot = ax.boxplot(all_lens95, tick_labels=labels)
             plt.xticks(rotation=45)
-            ax.tick_params(axis='both', labelsize=14)
+            ax.tick_params(axis="both", labelsize=14)
             plt.tight_layout()
-            plt.savefig(f'{dir_path}/seq_lens_boxp_95.pdf')
+            plt.savefig(f"{dir_path}/seq_lens_boxp_95.pdf")
             plt.clf()
 
             fig, ax = plt.subplots(figsize=(5, 6))
-            ax.set_ylabel('Sequence length', fontsize=14)
+            ax.set_ylabel("Sequence length", fontsize=14)
             bplot = ax.boxplot(all_lens100, tick_labels=labels)
             plt.xticks(rotation=45)
-            ax.tick_params(axis='both', labelsize=14)
+            ax.tick_params(axis="both", labelsize=14)
             plt.tight_layout()
-            plt.savefig(f'{dir_path}/seq_lens_boxp.pdf')
+            plt.savefig(f"{dir_path}/seq_lens_boxp.pdf")
             plt.clf()
 
 
             merged = os.path.join(dir_path, 'merged.fasta')
             cluster.main(merged)
 
-            clustered = os.path.join(dir_path, 'clustered.fasta')
-            class_generator.main(clustered, f'data/no_ptm/clustered_no_{ptm}.fasta', dir_path, factor=1)
+            clustered = os.path.join(dir_path, "clustered.fasta")
+            class_generator.main(
+                clustered,
+                f"data/no_ptm/clustered_no_{ptm}.fasta",
+                dir_path,
+                factor=1,
+            )
 
 
             unique = sum(1 for _ in SeqIO.parse(merged, "fasta"))
@@ -103,5 +118,5 @@ def main():
     os.makedirs('data/feature_importances', exist_ok=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
