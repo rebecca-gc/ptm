@@ -448,6 +448,9 @@ def main():
     ) in ptm_configs:
         dir_name = os.path.join("test", ptm_name, "databases")
         os.makedirs(dir_name, exist_ok=True)
+
+        print("=====\t", ptmd_word, "\t=====")
+
         databases(
             dir_name,
             f"https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=((organism_id:9606) AND (reviewed:true) AND (keyword:{kw}))",
