@@ -31,7 +31,9 @@ def main():
 
     download_all.main()
 
-    ptms_dir = "data/ptms"
+    ptms_dir = os.path.join("data", "ptms")
+
+    os.makedirs(ptms_dir, exist_ok=True)
 
     for ptm in os.listdir(ptms_dir):
         dir_path = os.path.join(ptms_dir, ptm)
@@ -79,7 +81,7 @@ def main():
             plt.xticks(rotation=45)
             ax.tick_params(axis="both", labelsize=14)
             plt.tight_layout()
-            plt.savefig(f"{dir_path}/seq_lens_boxp_95.pdf")
+            plt.savefig(os.path.join(dir_path, "seq_lens_boxp_95.pdf"))
             plt.clf()
 
             fig, ax = plt.subplots(figsize=(5, 6))
@@ -88,7 +90,7 @@ def main():
             plt.xticks(rotation=45)
             ax.tick_params(axis="both", labelsize=14)
             plt.tight_layout()
-            plt.savefig(f"{dir_path}/seq_lens_boxp.pdf")
+            plt.savefig(os.path.join(dir_path, "seq_lens_boxp.pdf"))
             plt.clf()
 
 
@@ -98,7 +100,7 @@ def main():
             clustered = os.path.join(dir_path, "clustered.fasta")
             class_generator.main(
                 clustered,
-                f"data/no_ptm/clustered_no_{ptm}.fasta",
+                clustered_neg,
                 dir_path,
                 factor=1,
             )

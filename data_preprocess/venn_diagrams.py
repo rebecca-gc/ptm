@@ -45,7 +45,7 @@ def venn_ptm(ptms_dir):
         loc="center left",
         bbox_to_anchor=(1, 0.5),
     )
-    plt.savefig("data/venn_ptm.pdf", bbox_inches="tight")
+    plt.savefig(os.path.join("data", "venn_ptm.pdf"), bbox_inches="tight")
     plt.clf()
 
 
@@ -79,7 +79,9 @@ def venn_disease_ptm(ptms_dir):
         loc="center left",
         bbox_to_anchor=(1, 0.5),
     )
-    plt.savefig("data/venn_ptm_disease.pdf", bbox_inches="tight")
+    plt.savefig(
+        os.path.join("data", "venn_ptm_disease.pdf"), bbox_inches="tight"
+    )
     plt.clf()
 
 
@@ -95,7 +97,7 @@ def venn_mim_ids(ptms_dir):
         'data/venn_disease_overlap5.pdf': all diseases
         'data/venn_disease_overlap4.pdf': all diseases excluding Parkinson's
     """
-    omim_dir = "local_data/omim"
+    omim_dir = os.path.join("local_data", "omim")
     seqs = []
     names = []
 
@@ -131,7 +133,9 @@ def venn_mim_ids(ptms_dir):
         loc="center left",
         bbox_to_anchor=(1, 0.5),
     )
-    plt.savefig("data/venn_disease_overlap5.pdf", bbox_inches="tight")
+    plt.savefig(
+        os.path.join("data", "venn_disease_overlap5.pdf"), bbox_inches="tight"
+    )
     plt.clf()
 
     dataset = {
@@ -144,7 +148,9 @@ def venn_mim_ids(ptms_dir):
         loc="center left",
         bbox_to_anchor=(1, 0.5),
     )
-    plt.savefig("data/venn_disease_overlap4.pdf", bbox_inches="tight")
+    plt.savefig(
+        os.path.join("data", "venn_disease_overlap4.pdf"), bbox_inches="tight"
+    )
     plt.clf()
 
 

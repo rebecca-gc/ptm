@@ -15,13 +15,13 @@ import os
 import requests
 from Bio import SeqIO
 
-NO_PTM_DIR = "data/no_ptm"
+NO_PTM_DIR = os.path.join("data", "no_ptm")
 
 DIRS = [
-    "data/ptms/glycosylation",
-    "data/ptms/s_nitrosylation",
-    "data/ptms/acetylation",
-    "data/ptms/methylation",
+    os.path.join("data", "ptms", "glycosylation"),
+    os.path.join("data", "ptms", "s_nitrosylation"),
+    os.path.join("data", "ptms", "acetylation"),
+    os.path.join("data", "ptms", "methylation"),
 ]
 
 

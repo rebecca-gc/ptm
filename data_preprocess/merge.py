@@ -82,7 +82,7 @@ def main(input_dir, output_dir):
     axes[2].hist(lens, bins=100, range=[0, 3000])
     axes[2].set_title("Length <= 3000")
     plt.tight_layout()
-    plt.savefig(f"{output_dir}/seq_lens_histo.pdf")
+    plt.savefig(os.path.join(output_dir, "seq_lens_histo.pdf"))
     plt.clf()
 
     print(f"{output_dir} Merged succesfully\n")

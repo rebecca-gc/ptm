@@ -292,7 +292,7 @@ def qptm(ptm_dir, ptm):
         Target PTM type (e.g., 'Glycosylation').
     """
     filepath = os.path.join(ptm_dir, "qPTM.fasta")
-    txtpath = "local_data/qPTM_all_data.txt"
+    txtpath = os.path.join("local_data", "qPTM_all_data.txt")
 
     uniprot_ids = []
     with open(txtpath, "r") as f:
@@ -446,7 +446,7 @@ def main():
         ptmd_word,
         ptm_code2_word,
     ) in ptm_configs:
-        dir_name = f"test/{ptm_name}/databases"
+        dir_name = os.path.join("test", ptm_name, "databases")
         os.makedirs(dir_name, exist_ok=True)
         databases(
             dir_name,

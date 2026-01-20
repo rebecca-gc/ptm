@@ -94,7 +94,7 @@ def vis_disease(dir_path):
         dir_path (str): Directory containing 'merged.fasta' for a PTM.
     """
     diseases = []
-    for record in SeqIO.parse(f"{dir_path}/merged.fasta", "fasta"):
+    for record in SeqIO.parse(os.path.join(dir_path, "merged.fasta"), "fasta"):
         if "MIM:" in record.description:
             parts = record.description.split(" MIM:")
             for disease_part in parts[1:]:
@@ -127,7 +127,9 @@ def vis_disease(dir_path):
     plt.ylabel("Frequency", fontsize=14)
     plt.xticks(rotation=45, ha="right", fontsize=12)
     plt.tight_layout()
-    plt.savefig(f"{dir_path}/top10diseases_{dir_path.split('/')[-1]}.pdf")
+    plt.savefig(
+        os.path.join(dir_path, "top10diseases_" + dir_path.split()[-1] + ".pdf")
+    )
     plt.clf()
 
 
@@ -197,7 +199,7 @@ def disease_stacked(ptms_dir):
     ax.legend()
     plt.xticks(rotation=45)
     plt.tight_layout()
-    plt.savefig(f"{ptms_dir}/top10diseases.pdf")
+    plt.savefig(os.path.join(ptms_dir, "top10diseases.pdf"))
     plt.clf()
 
 

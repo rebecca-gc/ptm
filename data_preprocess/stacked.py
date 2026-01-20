@@ -145,7 +145,7 @@ def main():
         - 'data/all_ptm/cum_counts.jpg'
         - 'data/all_ptm/cum_counts_percentage.jpg'
     """
-    output_dir = "data/all_ptm"
+    output_dir = os.path.join("data", "all_ptm")
 
     ptms = [
         "phosphorylation",

@@ -7,6 +7,7 @@ imbalance factor, then saves the sequences and corresponding
 class labels.
 """
 
+import os
 import random
 
 import numpy as np
@@ -47,13 +48,13 @@ def main(positive, negative, output, db="", factor=1.0):
         random.shuffle(records_pos)
         records_pos = records_pos[: int(len(records_neg) * factor)]
 
-    with open(f"{output}/{db}classes.txt", "w") as file:
+    with open(os.path.join(output, db + "classes.txt"), "w") as file:
         for _ in records_pos:
             file.write("1\n")
         for _ in records_neg:
             file.write("0\n")
 
-    with open(f"{output}/{db}seqs.fasta", "w") as file:
+    with open(os.path.join(output, db + "seqs.fasta"), "w") as file:
         i = 1
         for record in records_pos:
             file.write(f">Seq{i}\n{record}\n")
