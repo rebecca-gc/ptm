@@ -74,3 +74,11 @@ The repository is organized into two main directories:
 |[rfc/](./rfc/)|Scripts related to feature encoding and classification with Random Forests.|
 |[rfc/encoding_pipeline.py](./rfc/encoding_pipeline.py)|Converts sequences into machine learning features via iCAN for Random Forest training.|
 |[rfc/rfc_with_cv.py](./rfc/rfc_with_cv.py)|Trains and evaluates the Random Forest classifier with cross-validation. Reports performance metrics.|
+
+## Running
+
+The code should be run from the project's root directory. For processing the data users should run:
+
+```bash
+python data_preprocess/data_pipeline.py
+```
