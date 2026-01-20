@@ -33,6 +33,14 @@ The code is written in Python 3.11.13 with the following libraries installed:
 |venn|0.1.3|
 |wandb|0.21.0|
 
+### Conda Environment
+It is recommended to use Conda to build the environment with all dependencies. This process requires users to install Anaconda or Miniconda package managers. Users can install Conda using the instructions on the following link [https://docs.anaconda.com/miniconda/#quick-command-line-install](https://docs.anaconda.com/miniconda/#quick-command-line-install). If Conda is installed, the following sequence of instructions (for Linux-based systems) installs all dependencies and activates the environment:
+
+```bash
+conda env create -f environment.yml
+conda activate rebecca_ptm_env
+```
+
 ## Data
 The protein sequences used to predict the Post-Translational Modifications are collected from seven different databases.
 - SwissProt
