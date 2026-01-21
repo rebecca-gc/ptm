@@ -370,11 +370,10 @@ def databases(
     ptmd(ptm_dir, ptm, ptmd_url, ptmd_word)
     ptm_code2(ptm_dir, ptm_code2_word)
 
-    # TODO: Uncomment once the data is available
-    # if ptm != "S-Nitrosylation":
-    #     qptm(ptm_dir, ptm)
-    #     if ptm == "Glycosylation":
-    #         unipep(ptm_dir)
+    if ptm != "S-Nitrosylation":
+        qptm(ptm_dir, ptm)
+        if ptm == "Glycosylation":
+            unipep(ptm_dir)
 
 
 def main():
