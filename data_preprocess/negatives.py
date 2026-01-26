@@ -45,7 +45,7 @@ def swiss_prot(files):
     for i, url in enumerate(urls):
         filepath = os.path.join(NO_PTM_DIR, files[i])
 
-        with requests.get(url, stream=True, timeout=10) as request:
+        with requests.get(url, stream=True, timeout=120) as request:
             request.raise_for_status()
             with open(filepath, "wb") as f:
                 for chunk in request.iter_content(chunk_size=2**20):
