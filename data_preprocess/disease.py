@@ -65,7 +65,7 @@ def get_records(uniprot_ids, chunk_size=100):
 
         params = {"format": "tsv", "fields": fields, "query": query}
 
-        response = requests.get(base_url, params=params, timeout=30)
+        response = requests.get(base_url, params=params, timeout=120)
 
         if response.ok:
             tsv_data = StringIO(response.text)
@@ -128,7 +128,12 @@ def vis_disease(dir_path):
     plt.xticks(rotation=45, ha="right", fontsize=12)
     plt.tight_layout()
     plt.savefig(
-        os.path.join(dir_path, "top10diseases_" + dir_path.split()[-1] + ".pdf")
+        os.path.join(
+            dir_path,
+            "top10diseases_"
+            + os.path.basename(os.path.normpath(dir_path))
+            + ".pdf",
+        )
     )
     plt.clf()
 
@@ -146,7 +151,9 @@ def disease_stacked(ptms_dir):
         ptm_path = os.path.join(ptms_dir, ptm)
         if os.path.isdir(ptm_path):
             diseases = []
-            for record in SeqIO.parse(f"{ptm_path}/merged.fasta", "fasta"):
+            for record in SeqIO.parse(
+                os.path.join(ptm_path, "merged.fasta"), "fasta"
+            ):
                 if "MIM:" in record.description:
                     parts = record.description.split(" MIM:")
                     for disease_part in parts[1:]:
