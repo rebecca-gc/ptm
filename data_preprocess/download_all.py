@@ -446,7 +446,7 @@ def main():
         ptmd_word,
         ptm_code2_word,
     ) in ptm_configs:
-        dir_name = os.path.join("data", ptm_name, "databases")
+        dir_name = os.path.join("data", "ptms", ptm_name, "databases")
         os.makedirs(dir_name, exist_ok=True)
 
         print("=====\t", ptmd_word, "\t=====")
