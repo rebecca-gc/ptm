@@ -80,19 +80,6 @@ def main():
             plt.tight_layout()
             plt.savefig(f'{dir_path}/seq_lens_boxp.pdf')
             plt.clf()
-        
-            filepath = os.path.join(dir_path, 'merged.fasta')
-            unique = sum(1 for _ in SeqIO.parse(filepath, "fasta"))
-
-            filepath = os.path.join(dir_path, 'clustered.fasta')
-            clustered = sum(1 for _ in SeqIO.parse(filepath, "fasta"))
-            uni_clus = clustered/unique
-
-            clustered_neg = f'data/no_ptm/clustered_no_{ptm}.fasta'
-            neg = sum(1 for _ in SeqIO.parse(clustered_neg, "fasta"))
-
-            print(f'{ptm} unique {unique} clustered {clustered} per {uni_clus} neg_clus {neg} \n')
-
 
 
             merged = os.path.join(dir_path, 'merged.fasta')
@@ -100,6 +87,18 @@ def main():
 
             clustered = os.path.join(dir_path, 'clustered.fasta')
             class_generator.main(clustered, f'data/no_ptm/clustered_no_{ptm}.fasta', dir_path, factor=1)
+
+
+            unique = sum(1 for _ in SeqIO.parse(merged, "fasta"))
+
+            clustered_count = sum(1 for _ in SeqIO.parse(clustered, "fasta"))
+            uni_clus = clustered_count/unique
+
+            clustered_neg = f'data/no_ptm/clustered_no_{ptm}.fasta'
+            neg = sum(1 for _ in SeqIO.parse(clustered_neg, "fasta"))
+
+            print(f'{ptm} unique {unique} clustered {clustered_count} per {uni_clus} neg_clus {neg} \n')
+
 
     os.makedirs('data/feature_importances', exist_ok=True)
 
