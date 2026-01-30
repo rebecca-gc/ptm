@@ -1,17 +1,18 @@
-'''
+"""
 Merge existing multi-FASTA files from different databases, remove duplicate sequences,
 and generate sequence length visualizations. Also integrates disease annotation.
-'''
+"""
 
 import os
+
+import disease
 import matplotlib.pyplot as plt
 from Bio import SeqIO
-import disease
 
 
 def main(input_dir, output_dir):
-    '''
-    Merge multi-FASTA files from a directory, remove duplicate sequences, 
+    """
+    Merge multi-FASTA files from a directory, remove duplicate sequences,
     annotate sequences with disease information, and generate histograms and boxplots.
 
     Parameters
@@ -20,8 +21,8 @@ def main(input_dir, output_dir):
         Directory containing multi-FASTA files to merge.
     output_dir : str
         Directory to save the merged multi-FASTA file and visualizations.
-    '''
-    merged_file = os.path.join(output_dir, 'merged.fasta')
+    """
+    merged_file = os.path.join(output_dir, "merged.fasta")
     if os.path.exists(merged_file):
         os.remove(merged_file)
 
@@ -32,7 +33,7 @@ def main(input_dir, output_dir):
     all_lens = []
 
     for filename in os.listdir(input_dir):
-        if filename.endswith('.fasta'):
+        if filename.endswith(".fasta"):
             filepath = os.path.join(input_dir, filename)
             with_d, without_d = disease.main(filepath)
             rec_without_disease.append(without_d)
@@ -42,8 +43,10 @@ def main(input_dir, output_dir):
             all_records = list(set(all_records))
             records = all_records
             new_records = []
-            labels.append(filename.split('.')[0])
-            lens = [len(record.seq) for record in SeqIO.parse(filepath, 'fasta')]
+            labels.append(filename.split(".")[0])
+            lens = [
+                len(record.seq) for record in SeqIO.parse(filepath, "fasta")
+            ]
             all_lens.append(lens)
 
     removed_duplicates = []
@@ -60,28 +63,28 @@ def main(input_dir, output_dir):
                     removed_duplicates.append([rec[0], rec[1], mims, rec[3]])
 
     lens = []
-    with open(merged_file, 'w') as merged:
+    with open(merged_file, "w") as merged:
         for rec in removed_duplicates:
-            merged.write(f'>{rec[0]}|{rec[1]}{rec[2]}\n{rec[3]}\n')
+            merged.write(f">{rec[0]}|{rec[1]}{rec[2]}\n{rec[3]}\n")
             lens.append(len(rec[3]))
         for recs in rec_without_disease:
             for r in recs:
                 if r.seq not in seen_seqs:
-                    merged.write(f'>{r.description}\n{r.seq}\n')
+                    merged.write(f">{r.description}\n{r.seq}\n")
                     seen_seqs.append(r.seq)
                     lens.append(len(r.seq))
 
     fig, axes = plt.subplots(1, 3)
     axes[0].hist(lens, bins=100)
-    axes[0].set_title('All sequences')
+    axes[0].set_title("All sequences")
     axes[1].hist(lens, bins=100, range=[0, 5000])
-    axes[1].set_title('Length <= 5000')
+    axes[1].set_title("Length <= 5000")
     axes[2].hist(lens, bins=100, range=[0, 3000])
-    axes[2].set_title('Length <= 3000')
+    axes[2].set_title("Length <= 3000")
     plt.tight_layout()
-    plt.savefig(f'{output_dir}/seq_lens_histo.pdf')
+    plt.savefig(os.path.join(output_dir, "seq_lens_histo.pdf"))
     plt.clf()
 
-    print(f'{output_dir} Merged succesfully\n')
+    print(f"{output_dir} Merged succesfully\n")
 
     disease.vis_disease(output_dir)

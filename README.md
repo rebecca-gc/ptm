@@ -33,6 +33,14 @@ The code is written in Python 3.11.13 with the following libraries installed:
 |venn|0.1.3|
 |wandb|0.21.0|
 
+### Conda Environment
+It is recommended to use Conda to build the environment with all dependencies. This process requires users to install Anaconda or Miniconda package managers. Users can install Conda using the instructions on the following link [https://docs.anaconda.com/miniconda/#quick-command-line-install](https://docs.anaconda.com/miniconda/#quick-command-line-install). If Conda is installed, the following sequence of instructions (for Linux-based systems) installs all dependencies and activates the environment:
+
+```bash
+conda env create -f environment.yml
+conda activate rebecca_ptm_env
+```
+
 ## Data
 The protein sequences used to predict the Post-Translational Modifications are collected from seven different databases.
 - SwissProt
@@ -40,7 +48,7 @@ The protein sequences used to predict the Post-Translational Modifications are c
 - dbPTM
 - ptmd
 - PTMCode2
-- qPTM
+- qPTM (Note: requires data access inquiry and has to be downloaded manually)
 - Unipep
 
 These databases were integrated, filtered, and processed into positive and negative datasets for machine learning classification. Preprocessing steps included merging, deduplication, false negative removal, clustering, and sequence-length filtering. Full details are described in the thesis.
@@ -66,3 +74,11 @@ The repository is organized into two main directories:
 |[rfc/](./rfc/)|Scripts related to feature encoding and classification with Random Forests.|
 |[rfc/encoding_pipeline.py](./rfc/encoding_pipeline.py)|Converts sequences into machine learning features via iCAN for Random Forest training.|
 |[rfc/rfc_with_cv.py](./rfc/rfc_with_cv.py)|Trains and evaluates the Random Forest classifier with cross-validation. Reports performance metrics.|
+
+## Running
+
+The code should be run from the project's root directory. For processing the data users should run:
+
+```bash
+python data_preprocess/data_pipeline.py
+```

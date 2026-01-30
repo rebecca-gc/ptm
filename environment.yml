@@ -1,0 +1,18 @@
+name: rebecca_ptm_env
+channels:
+  - defaults
+  - conda-forge
+  - bioconda
+dependencies:
+  - scikit-learn
+  - pandas
+  - numpy
+  - lxml
+  - biopython
+  - bs4
+  - cd-hit
+  - joblib
+  - matplotlib
+  - requests
+  - venn
+  - wandb

@@ -1,4 +1,4 @@
-'''
+"""
 Provides visualization of PTM datasets and their disease associations using Venn diagrams.
 
 Functions:
@@ -6,74 +6,87 @@ Functions:
 - venn_disease_ptm: Visualizes overlap of disease-associated sequences across PTMs.
 - venn_mim_ids: Visualizes overlap of sequences associated with specific MIM IDs.
 - main: Runs all Venn diagram visualizations for a given PTM directory.
-'''
+"""
 
 import os
 import re
+
 import matplotlib.pyplot as plt
 from Bio import SeqIO
 from venn import venn
 
 
 def venn_ptm(ptms_dir):
-    '''
+    """
     Generates a Venn diagram showing the overlap of sequences that have different PTMs.
 
     Args:
         ptms_dir (str): Path to the directory containing PTM subdirectories with merged multi-FASTA files.
-    
+
     Saves:
         'data/venn_ptm.pdf' containing the Venn diagram of PTM overlaps.
-    '''
+    """
     sets = []
     names = []
     for d in os.listdir(ptms_dir):
         if os.path.isdir(os.path.join(ptms_dir, d)):
             names.append(d)
             seq_set = set()
-            filepath = os.path.join(ptms_dir, d, 'merged.fasta')
-            for record in SeqIO.parse(filepath, 'fasta'):
+            filepath = os.path.join(ptms_dir, d, "merged.fasta")
+            for record in SeqIO.parse(filepath, "fasta"):
                 seq_set.add(record.seq)
             sets.append(seq_set)
     dataset = dict(zip(names, sets))
-    colors = ['#7570b3', '#d95f02', '#e7298a', '#1b9e77']
+    colors = ["#7570b3", "#d95f02", "#e7298a", "#1b9e77"]
     ax = venn(dataset, legend_loc=None, cmap=colors)
-    plt.legend(handles=ax.patches, labels=names, loc='center left', bbox_to_anchor=(1, 0.5))
-    plt.savefig('data/venn_ptm.pdf', bbox_inches='tight')
+    plt.legend(
+        handles=ax.patches,
+        labels=names,
+        loc="center left",
+        bbox_to_anchor=(1, 0.5),
+    )
+    plt.savefig(os.path.join("data", "venn_ptm.pdf"), bbox_inches="tight")
     plt.clf()
 
 
 def venn_disease_ptm(ptms_dir):
-    '''
+    """
     Generates a Venn diagram showing the overlap of sequences associated with diseases across PTMs.
 
     Args:
         ptms_dir (str): Path to the directory containing PTM subdirectories with merged multi-FASTA files.
-    
+
     Saves:
         'data/venn_ptm_disease.pdf' containing the Venn diagram of disease-associated PTM sequences.
-    '''
+    """
     diseases = []
     names = []
     for d in os.listdir(ptms_dir):
         if os.path.isdir(os.path.join(ptms_dir, d)):
             names.append(d)
             disease_set = set()
-            filepath = os.path.join(ptms_dir, d, 'merged.fasta')
-            for record in SeqIO.parse(filepath, 'fasta'):
-                if 'MIM:' in record.description:
+            filepath = os.path.join(ptms_dir, d, "merged.fasta")
+            for record in SeqIO.parse(filepath, "fasta"):
+                if "MIM:" in record.description:
                     disease_set.add(record.seq)
             diseases.append(disease_set)
     dataset = dict(zip(names, diseases))
-    colors = ['#7570b3', '#d95f02', '#e7298a', '#1b9e77']
+    colors = ["#7570b3", "#d95f02", "#e7298a", "#1b9e77"]
     ax = venn(dataset, legend_loc=None, cmap=colors)
-    plt.legend(handles=ax.patches, labels=names, loc='center left', bbox_to_anchor=(1, 0.5))
-    plt.savefig('data/venn_ptm_disease.pdf', bbox_inches='tight')
+    plt.legend(
+        handles=ax.patches,
+        labels=names,
+        loc="center left",
+        bbox_to_anchor=(1, 0.5),
+    )
+    plt.savefig(
+        os.path.join("data", "venn_ptm_disease.pdf"), bbox_inches="tight"
+    )
     plt.clf()
 
 
 def venn_mim_ids(ptms_dir):
-    '''
+    """
     Generates Venn diagrams showing the overlap of sequences associated with specific MIM IDs.
     Also generates a version excluding Parkinson's disease for clarity.
 
@@ -83,28 +96,30 @@ def venn_mim_ids(ptms_dir):
     Saves:
         'data/venn_disease_overlap5.pdf': all diseases
         'data/venn_disease_overlap4.pdf': all diseases excluding Parkinson's
-    '''
-    omim_dir = 'local_data/omim'
+    """
+    omim_dir = os.path.join("local_data", "omim")
     seqs = []
     names = []
 
     for filename in os.listdir(omim_dir):
-        if filename.endswith('tsv') and filename[0] not in '._':
+        if filename.endswith("tsv") and filename[0] not in "._":
             mim_ids = []
             seq_set = set()
-            names.append(filename.split('.')[0])
+            names.append(filename.split(".")[0])
             filepath = os.path.join(omim_dir, filename)
             print(filepath)
             with open(filepath) as file:
                 for line in file:
-                    if line[0] in '#*%':
+                    if line[0] in "#*%":
                         mim_ids.append(line.split()[0][1:])
 
             for d in os.listdir(ptms_dir):
                 if os.path.isdir(os.path.join(ptms_dir, d)):
-                    filepath = os.path.join(ptms_dir, d, 'merged.fasta')
-                    for record in SeqIO.parse(filepath, 'fasta'):
-                        diseases_in_record = re.findall(r'MIM:(\d+)', record.description)
+                    filepath = os.path.join(ptms_dir, d, "merged.fasta")
+                    for record in SeqIO.parse(filepath, "fasta"):
+                        diseases_in_record = re.findall(
+                            r"MIM:(\d+)", record.description
+                        )
                         for dis in diseases_in_record:
                             if dis in mim_ids:
                                 seq_set.add(record.seq)
@@ -112,24 +127,40 @@ def venn_mim_ids(ptms_dir):
 
     dataset = dict(zip(names, seqs))
     ax = venn(dataset, legend_loc=None)
-    plt.legend(handles=ax.patches, labels=names, loc='center left', bbox_to_anchor=(1, 0.5))
-    plt.savefig('data/venn_disease_overlap5.pdf', bbox_inches='tight')
+    plt.legend(
+        handles=ax.patches,
+        labels=names,
+        loc="center left",
+        bbox_to_anchor=(1, 0.5),
+    )
+    plt.savefig(
+        os.path.join("data", "venn_disease_overlap5.pdf"), bbox_inches="tight"
+    )
     plt.clf()
 
-    dataset = {name: seq for name, seq in zip(names, seqs) if name != 'parkinson'}
+    dataset = {
+        name: seq for name, seq in zip(names, seqs) if name != "parkinson"
+    }
     ax = venn(dataset, legend_loc=None)
-    plt.legend(handles=ax.patches, labels=names, loc='center left', bbox_to_anchor=(1, 0.5))
-    plt.savefig('data/venn_disease_overlap4.pdf', bbox_inches='tight')
+    plt.legend(
+        handles=ax.patches,
+        labels=names,
+        loc="center left",
+        bbox_to_anchor=(1, 0.5),
+    )
+    plt.savefig(
+        os.path.join("data", "venn_disease_overlap4.pdf"), bbox_inches="tight"
+    )
     plt.clf()
 
 
 def main(ptms_dir):
-    '''
+    """
     Executes all Venn diagram visualizations for a given PTM directory.
 
     Args:
         ptms_dir (str): Path to the directory containing PTM subdirectories with merged multi-FASTA files.
-    '''
+    """
     venn_ptm(ptms_dir)
     venn_disease_ptm(ptms_dir)
     venn_mim_ids(ptms_dir)
